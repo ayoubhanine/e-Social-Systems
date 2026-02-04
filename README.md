@@ -25,4 +25,17 @@ git checkout -b feature/example
 npm run dev
 ```
 
+# how to push changes
+- stage changes
+```sh
+git add . -v 
+```
+- commit changes
+```sh
+git commit -m "your commit message"
+```
+- push changes
+```sh
+git push origin feature/your-branch-name
+```
 
