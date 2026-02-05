@@ -1,26 +1,30 @@
-import {CSS,HTML} from "../utils/index"
+import {css, html} from "../utils/index"
 function template(){
-    return HTML`
+    return html`
     <section class="your section">
         <div>
             <h1>base</h1>
         </div>
+        <button>Click me</button>
     </section>
     `
 }
 
-function css(){
-    return CSS`
+function styles(){
+    return css`
+    
     
     `
 }
 
 function script(){
-    
+    document.querySelector("button")?.addEventListener("click" , ()=>{
+        alert("Button clicked!")
+    })
 }
 
 const base = {template,
-    css,
+    styles,
     script
 }
 

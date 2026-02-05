@@ -1,7 +1,7 @@
 import {select} from "../utils/index"
-import Dashboard from "../pages/base"
+import base from "../pages/base"
 const routes = {
-    "/": Dashboard
+  "/": base
 }
 
 const root = select("#app") 
@@ -12,12 +12,14 @@ function navigate(path="/"){
 }
 
 function render(path="/"){
-    const page = routes[path]
-    root.innerHTML = page().template()
+    const page = routes[path] 
+    console.log(page.template());
+    
+    root.innerHTML = page.template()
     const style = document.createElement("style")
-    style.textContent = page().css()
+    style.textContent = page.styles()
     document.head.appendChild(style)
-    page().script()
+    page.script()
 }
 
 window.addEventListener('popstate', () => {
