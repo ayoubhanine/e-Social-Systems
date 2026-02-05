@@ -1,19 +1,23 @@
 import { css, html } from "../utils/index";
 function template() {
-  return html` <section class="your-section"></section> `;
+  return html` <section class="section"></section> `;
 }
+
 
 function styles() {
   return css`
-  h1{
-    
-  }
+  
   `;
 }
+// add event listeners or other setup when navigating to this page
+function script() {
 
-function script() {}
+}
 
-function cleanup() {}
+// delete event listeners or other resources when navigating away
+function cleanup() {
+    
+}
 
 const base = {
   template,
