@@ -97,6 +97,6 @@ function script() {
   });
 }
 
-const base = { template, styles, script };
+const Dashboard = { template, styles, script };
 
-export default base;
+export default Dashboard;
