@@ -9,10 +9,10 @@ function styles() {
 
 function script() {}
 
-const base = {
+const Employeurs = {
   template,
   styles,
   script,
 };
 
-export default base;
+export default Employeurs;
