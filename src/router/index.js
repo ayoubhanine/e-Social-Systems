@@ -1,4 +1,4 @@
-import { html, select } from "../utils/index";
+import { html, select, sleep } from "../utils/index";
 import Dashboard from "../pages/Dashboard";
 import Declaration from "../pages/déclaration";
 import Employeurs from "../pages/Employeurs";
@@ -16,10 +16,15 @@ const routes = {
 const root = select("#app");
 const page_style = document.createElement("style");
 document.head.appendChild(page_style);
-
-function navigate(path) {
-  history.pushState({}, "", path);
+async function navigate(path) {
+  root.classList.add("exit");
+  await sleep(300);
+  window.history.pushState(null, null, path);
   render(path);
+  root.classList.remove("exit");
+  root.classList.add("enter");
+  await sleep(300); 
+  root.classList.remove("enter");
 }
 
 function render(path) {

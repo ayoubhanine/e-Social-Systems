@@ -19,3 +19,7 @@ export function css(strings , ...values){
         return acc + str + (values[i] || "")
     } , "")
 }
+
+export function sleep(ms){
+    return new Promise(resolve => setTimeout(resolve , ms))
+}
