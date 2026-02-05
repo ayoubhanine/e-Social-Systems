@@ -38,6 +38,7 @@ function render(path) {
 }
 window.addEventListener("popstate", () => {
   render(window.location.pathname);
+  toggle_active_link(window.location.pathname);
 });
 document.addEventListener("click", (e) => {
   const link = e.target.closest && e.target.closest("[data-link]");
@@ -45,6 +46,18 @@ document.addEventListener("click", (e) => {
   e.preventDefault();
   const path = link.getAttribute("href");
   if (path) navigate(path);
-  else alert("no path");
+  toggle_active_link(path);
 });
+
+function toggle_active_link(path) {
+  const links = document.querySelectorAll("[data-link]");
+  links.forEach((link) => {
+    if (link.getAttribute("href") === path) {
+      link.classList.add("active");
+    } else {
+      link.classList.remove("active");
+    }
+  });
+}
+
 render(window.location.pathname);
