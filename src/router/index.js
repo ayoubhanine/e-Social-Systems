@@ -45,4 +45,4 @@ document.addEventListener("click", (e) => {
   else alert("no path");
 });
 
-render("/");
+render(window.location.pathname);
