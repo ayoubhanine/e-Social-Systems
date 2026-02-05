@@ -1,7 +1,8 @@
 import {select} from "../utils/index"
 import base from "../pages/base"
+import Dashboard from "../pages/Dashboard"
 const routes = {
-  "/": base
+  "/": Dashboard
 }
 
 const root = select("#app") 
