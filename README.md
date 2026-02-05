@@ -1,15 +1,20 @@
-# development
+# keep branch up to date with main
+```sh
+git checkout main
+git pull origin main
+git checkout feature/your-branch-name
+git merge main
+```
 
+# development
 - clone project 
 ```sh
 git clone https://github.com/ayoubhanine/e-Social-Systems.git
-
 ```
 - install dependencies
 ```sh
 npm install
 ```
-
 - pull latest changes
 ```sh
 git pull origin main

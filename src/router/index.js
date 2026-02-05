@@ -1,40 +1,50 @@
-import {select} from "../utils/index"
-import base from "../pages/base"
+import { html, select } from "../utils/index";
+import Dashboard from "../pages/Dashboard";
+import Declaration from "../pages/déclaration";
+import Employeurs from "../pages/Employeurs";
+import Assures from "../pages/assures";
+import historique from "../pages/Historique";
 const routes = {
-  "/": base
+  "/": Dashboard,
+  "/declaration": Declaration,
+  "/employeurs": Employeurs,
+  "/assures": Assures,
+  "/historique":historique
+};
+
+// create root element and style element for page styles
+const root = select("#app");
+const page_style = document.createElement("style");
+document.head.appendChild(page_style);
+
+function navigate(path) {
+  history.pushState({}, "", path);
+  render(path);
 }
 
-const root = select("#app") 
+function render(path) {
+  const page = routes[path];
+  if (!page) {
+    root.innerHTML = html`<h1>404 - Not Found</h1>`;
+    page_style.textContent = "";
+    return;
+  }
+  root.innerHTML = page.template();
+  page_style.textContent = page.styles();
 
-function navigate(path="/"){
-    history.pushState({} , "" , path)
-    render(path)
+  // cleanup previous page script if exists
+  if (page.cleanup) page.cleanup();
+  if (page.script) page.script();
 }
-
-function render(path="/"){
-    const page = routes[path] 
-    console.log(page.template());
-    
-    root.innerHTML = page.template()
-    const style = document.createElement("style")
-    style.textContent = page.styles()
-    document.head.appendChild(style)
-    page.script()
-}
-
-window.addEventListener('popstate', () => {
+window.addEventListener("popstate", () => {
   render(window.location.pathname);
 });
-
-
-document.addEventListener('click', e => {
-  if (e.target.matches("[data-link]")) {
-    e.preventDefault();
-    let path = e.target.getAttribute("href");
-    if (path)
-    navigate(path);
-  }
+document.addEventListener("click", (e) => {
+  const link = e.target.closest && e.target.closest("[data-link]");
+  if (!link) return;
+  e.preventDefault();
+  const path = link.getAttribute("href");
+  if (path) navigate(path);
+  else alert("no path");
 });
-
-
 render(window.location.pathname);

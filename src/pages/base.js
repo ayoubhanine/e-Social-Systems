@@ -1,31 +1,29 @@
-import {css, html} from "../utils/index"
-function template(){
-    return html`
-    <section class="your section">
-        <div>
-            <h1>base</h1>
-        </div>
-        <button>Click me</button>
-    </section>
-    `
+import { css, html } from "../utils/index";
+function template() {
+  return html` <section class="section"></section> `;
 }
 
-function styles(){
-    return css`
+
+function styles() {
+  return css`
+  
+  `;
+}
+// add event listeners or other setup when navigating to this page
+function script() {
+
+}
+
+// delete event listeners or other resources when navigating away
+function cleanup() {
     
-    
-    `
 }
 
-function script(){
-    document.querySelector("button")?.addEventListener("click" , ()=>{
-        alert("Button clicked!")
-    })
-}
+const base = {
+  template,
+  styles,
+  script,
+  cleanup
+};
 
-const base = {template,
-    styles,
-    script
-}
-
-export default base
+export default base;
