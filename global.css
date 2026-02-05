@@ -1,4 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Merriweather:wght@400;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
+
 :root {
   --background: #f8fafc;
   --foreground: #1e293b;
@@ -107,14 +108,17 @@
   --shadow-2xl: 0px 4px 8px -1px hsl(0 0% 0% / 0.25);
 }
 
-*, *::before, *::after {
+*,
+*::before,
+*::after {
   box-sizing: border-box;
 }
 
-*{
+* {
   padding: 0;
   margin: 0;
 }
+
 @media (prefers-reduced-motion: no-preference) {
   html {
     interpolate-size: allow-keywords;
@@ -126,16 +130,29 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-img, picture, video, canvas, svg {
+img,
+picture,
+video,
+canvas,
+svg {
   display: block;
   max-width: 100%;
 }
 
-input, button, textarea, select {
+input,
+button,
+textarea,
+select {
   font: inherit;
 }
 
-p, h1, h2, h3, h4, h5, h6 {
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   overflow-wrap: break-word;
 }
 
@@ -143,9 +160,15 @@ p {
   text-wrap: pretty;
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   text-wrap: balance;
 }
+
 /* app container */
 #app-container {
   display: grid;
@@ -170,7 +193,7 @@ aside {
   height: 100dvh;
 }
 
-aside > div:first-child {
+aside>div:first-child {
   padding: 1.5rem;
   border-bottom: 1px solid #475569;
 }
@@ -231,17 +254,19 @@ aside a svg {
   flex-shrink: 0;
 }
 
-aside > div:last-child {
+aside>div:last-child {
   padding: 1rem;
   border-top: 1px solid #475569;
   font-size: 0.75rem;
   color: #64748b;
   text-align: center;
 }
-header { background-color: #ffffff;
-    position: sticky;
+
+header {
+  background-color: #ffffff;
+  position: sticky;
   top: 0;
-   color: #030303;
-    padding: 1.3rem;
-     font-size: 0.8rem;
-       }
+  color: #030303;
+  padding: 1.3rem;
+  font-size: 0.8rem;
+}

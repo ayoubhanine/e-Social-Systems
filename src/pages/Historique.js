@@ -2,7 +2,9 @@ import { css, html } from "../utils/index";
 function template() {
   return html`
     <section class="historique">
-      <header>Historique des Déclarations</header>
+      <header >
+        <h1>Historique</h1>
+      </header>
     </section>
   `;
 }
