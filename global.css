@@ -161,10 +161,13 @@ h1, h2, h3, h4, h5, h6 {
 aside {
   width: 16rem;
   background-color: #1e293b;
-  color: #ffffff;
+  color: var(--sidebar-foreground);
   display: flex;
   flex-direction: column;
   box-shadow: var(--shadow-xl);
+  position: sticky;
+  top: 0;
+  height: 100dvh;
 }
 
 aside > div:first-child {
@@ -181,16 +184,11 @@ aside .flex {
 aside h1 {
   font-size: 1.25rem;
   font-weight: 700;
+  color: var(--sidebar-primary-foreground);
   letter-spacing: -0.025em;
   margin: 0;
 }
 
-aside > div:first-child > p {
-  font-size: 0.75rem;
-  color: #94a3b8;
-  margin-top: 0.5rem;
-  margin-bottom: 0;
-}
 
 aside nav {
   flex: 1;
@@ -209,7 +207,7 @@ aside a {
   border-radius: var(--radius);
   border: none;
   background: transparent;
-  color: #cbd5e1;
+  color: var(--sidebar-primary-foreground);
   cursor: pointer;
   transition: all 200ms ease;
   font-weight: 500;

@@ -8,7 +8,13 @@ function template() {
 }
 
 function styles() {
-  return css``;
+  return css`
+  .historique{
+    height:120vh;
+  }
+  
+
+  `;
 }
 function script() {}
 
