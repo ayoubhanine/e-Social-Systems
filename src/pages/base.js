@@ -4,15 +4,22 @@ function template() {
 }
 
 function styles() {
-  return css``;
+  return css`
+  h1{
+    
+  }
+  `;
 }
 
 function script() {}
+
+function cleanup() {}
 
 const base = {
   template,
   styles,
   script,
+  cleanup
 };
 
 export default base;

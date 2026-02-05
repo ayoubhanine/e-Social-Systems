@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Merriweather:wght@400;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
 :root {
   --background: #f8fafc;
   --foreground: #1e293b;
@@ -110,6 +111,10 @@
   box-sizing: border-box;
 }
 
+*{
+  padding: 0;
+  margin: 0;
+}
 @media (prefers-reduced-motion: no-preference) {
   html {
     interpolate-size: allow-keywords;
@@ -140,4 +145,98 @@ p {
 
 h1, h2, h3, h4, h5, h6 {
   text-wrap: balance;
+}
+/* app container */
+#app-container {
+  display: grid;
+  grid-template-columns: 16rem 1fr;
+  min-height: 100vh;
+  background-color: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+}
+
+
+/* Sidebar Styles */
+aside {
+  width: 16rem;
+  background-color: #1e293b;
+  color: #ffffff;
+  display: flex;
+  flex-direction: column;
+  box-shadow: var(--shadow-xl);
+}
+
+aside > div:first-child {
+  padding: 1.5rem;
+  border-bottom: 1px solid #475569;
+}
+
+aside .flex {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+aside h1 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  margin: 0;
+}
+
+aside > div:first-child > p {
+  font-size: 0.75rem;
+  color: #94a3b8;
+  margin-top: 0.5rem;
+  margin-bottom: 0;
+}
+
+aside nav {
+  flex: 1;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+aside a {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  border-radius: var(--radius);
+  border: none;
+  background: transparent;
+  color: #cbd5e1;
+  cursor: pointer;
+  transition: all 200ms ease;
+  font-weight: 500;
+  text-decoration: none;
+}
+
+aside a:hover {
+  background-color: #334155;
+  color: #ffffff;
+}
+
+aside a.active {
+  background-color: #2563eb;
+  color: #ffffff;
+  box-shadow: var(--shadow-md);
+}
+
+aside a svg {
+  width: 1.25rem;
+  height: 1.25rem;
+  flex-shrink: 0;
+}
+
+aside > div:last-child {
+  padding: 1rem;
+  border-top: 1px solid #475569;
+  font-size: 0.75rem;
+  color: #64748b;
+  text-align: center;
 }
