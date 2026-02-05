@@ -1,6 +1,6 @@
-import {css , html} from "../utils/index"
+import {CSS,HTML} from "../utils/index"
 function template(){
-    return html`
+    return HTML`
     <section class="your section">
         <div>
             <h1>base</h1>
@@ -10,7 +10,7 @@ function template(){
 }
 
 function css(){
-    return css`
+    return CSS`
     
     `
 }

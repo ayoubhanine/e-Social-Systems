@@ -9,5 +9,5 @@ export const select = (selector)=>{
 }
 
 // just to get syntax highlighting in other files
-export function html(strings , ...values){}
-export function css(strings , ...values){}
+export function HTML(strings , ...values){}
+export function CSS(strings , ...values){}
