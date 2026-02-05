@@ -3,7 +3,7 @@ function template(){
     return html`
     <section class="your section">
         <div>
-            <h1>Gestion des Assurés</h1>
+           <header> <h1>Gestion des Assurés</h1></header>
         </div>
        
     </section>

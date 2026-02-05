@@ -238,3 +238,10 @@ aside > div:last-child {
   color: #64748b;
   text-align: center;
 }
+header { background-color: #ffffff;
+    position: sticky;
+  top: 0;
+   color: #030303;
+    padding: 1.3rem;
+     font-size: 0.8rem;
+       }
