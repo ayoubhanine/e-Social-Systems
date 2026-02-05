@@ -1,21 +1,21 @@
-import {select} from "../utils/index"
-import base from "../pages/base"
-import Dashboard from "../pages/Dashboard"
+import {html, select} from "../utils/index"
 const routes = {
-  "/": Dashboard
+  "/": html`<h1>nothing added yet</h1>`
 }
 
 const root = select("#app") 
 
 function navigate(path="/"){
-    history.pushState({} , "" , path)
-    render(path)
+  history.pushState({} , "" , path)
+  render(path)
 }
 
 function render(path="/"){
-    const page = routes[path] 
-    console.log(page.template());
-    
+    const page = routes[path]
+    if(!page || typeof page !== "object"){
+        root.innerHTML = html`<h1>404 - Not Found</h1>`
+        return
+    }
     root.innerHTML = page.template()
     const style = document.createElement("style")
     style.textContent = page.styles()
@@ -38,4 +38,4 @@ document.addEventListener('click', e => {
 });
 
 
-render(window.location.pathname);
+render("/");
