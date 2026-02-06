@@ -1,4 +1,4 @@
-import { css, html, select } from "../utils/index";
+import { css, html} from "../utils/index";
 function template() {
   return html`
     <section class="historique">
