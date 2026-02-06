@@ -12,8 +12,6 @@ const routes = {
   "/historique":historique
 };
 
-const cache = new Map()
-
 // create root element and style element for page styles
 const root = select("#app");
 const page_style = document.createElement("style");
@@ -35,11 +33,6 @@ function render(path) {
     root.innerHTML = html`<h1>404 - Not Found</h1>`;
     page_style.textContent = "";
     return;
-  }
-
-  if(cache.has(path)){
-    const {node , styles} = cache.get(path)
-    root.innerHTML = ''
   }
   root.innerHTML = page.template();
   page_style.textContent = page.styles();

@@ -1,8 +1,8 @@
-import { css, html } from "../utils/index";
+import { css, html, select } from "../utils/index";
 function template() {
   return html`
     <section class="historique">
-      <header >
+      <header>
         <h1>Historique</h1>
       </header>
     </section>
@@ -10,23 +10,17 @@ function template() {
 }
 
 function styles() {
-  return css`
-  .historique{
-    height:120vh;
-  }
-  
-
-  `;
+  return css``;
 }
 function script() {}
 
 function cleanup() {}
 
-const historique = {
+const Historique = {
   template,
   styles,
   script,
   cleanup,
 };
 
-export default historique;
+export default Historique;
