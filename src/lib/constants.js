@@ -1,0 +1,2 @@
+export const EMPLOYEES_PERCENTAGE = 4
+export const EMPLOYER_PERCENTAGE = 8
