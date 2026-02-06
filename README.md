@@ -4,6 +4,7 @@ git checkout main
 git pull origin main
 git checkout feature/your-branch-name
 git merge main
+npm install 
 ```
 
 # development
@@ -30,7 +31,7 @@ git checkout -b feature/example
 npm run dev
 ```
 
-# how to push changes
+# pushing changes
 - stage changes
 ```sh
 git add . -v 
