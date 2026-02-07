@@ -1,23 +1,26 @@
+//@ts-check
 import { DECLARATIONS, EMPLOYERS } from "../data/index";
-import { generate_id } from "../utils/index";
 import { Employer, Declaration, Employee } from "./classes";
 
-// employee functions
-
 /**
- * 
- * @returns {Employee[]}
+ *
+ * @returns {Employee[]} Array of all employees
  */
 export function get_all_employees() {
+  /**@type {Employee[]} */
   let employees = [];
   for (let employer of EMPLOYERS.values()) {
-    employees = employees.concat(employer.employees);
+    // generate array of employees from employer's employee map and push to employees array
+    employees.push(...Array.from(employer.employees)); 
   }
   return employees;
 }
 
 
-
+/**
+ * @param {string} employee_id 
+ * @returns {number | null} Total contributions (employee + employer) or null if employee not found
+ */
 export function get_employee_rights(employee_id) {
   /**
    * @type {Employee | null}
@@ -29,12 +32,21 @@ export function get_employee_rights(employee_id) {
   }
   if (!employee) return null;
   
+  let total = 0;
+  for (let declaration of DECLARATIONS.values()) {
+    if (declaration.employee_id === employee_id) {
+      total += employee.contribution; 
+      total += employee.salary * 0.08; 
+    }
+  }
+  return total;
 }
 
 
-/** *
- * @param {string} employer_id
- * @param {Employee} employee
+/**
+ * Adds an employee to an employer.
+ * @param {string} employer_id 
+ * @param {Employee} employee 
  * @returns {void}
  */
 export function add_employee(employer_id, employee) {
@@ -47,8 +59,10 @@ export function add_employee(employer_id, employee) {
 }
 
 /**
- * @param {Declaration} declaration
+ * Adds a declaration to the declarations map.
+ * @param {Declaration} declaration 
  * @returns {void}
+ * @throws {Error} 
  */
 export function add_declaration(declaration) {
   if (!(declaration instanceof Declaration))
@@ -57,8 +71,10 @@ export function add_declaration(declaration) {
 }
 
 /**
- * @param {Employer} employer
+ * Adds an employer to the employers map.
+ * @param {Employer} employer 
  * @returns {void}
+ * @throws {Error} 
  */
 export function add_employer(employer) {
   if (!(employer instanceof Employer))
@@ -67,8 +83,10 @@ export function add_employer(employer) {
 }
 
 /**
- * @param {string} employee_id
- * @returns {number}
+ * Calculates total employee contribution for all declarations of a given employee.
+ * @param {string} employee_id 
+ * @returns {number} 
+ * @throws {Error}   
  */
 export function get_employee_contribution(employee_id) {
   /**
@@ -90,14 +108,21 @@ export function get_employee_contribution(employee_id) {
 }
 
 /**
- * @param {string} employer_id
- * @returns {number}
+ * Calculates total employer contribution for all declarations of a given employer.
+ * @param {string} employer_id 
+ * @returns {number} 
  */
 export function get_employer_contribution(employer_id) {
+  const employer = EMPLOYERS.get(employer_id);
+  if (!employer) return 0;
+  
   let contribution = 0;
   for (let declaration of DECLARATIONS.values()) {
     if (declaration.employer_id === employer_id) {
-      contribution += declaration;
+      const employee = employer.get_employee(declaration.employee_id);
+      if (employee) {
+        contribution += employee.salary * 0.08; 
+      }
     }
   }
   return contribution;
@@ -107,25 +132,36 @@ export function get_employer_contribution(employer_id) {
 
 // global statistics functions
 /**
- * @returns {number}
+ * Calculates the total of all contributions (employee + employer) across all declarations.
+ * @returns {number} Total contributions from all declarations
  */
 export function get_total_contributions() {
-  let contribution = 0;
+  let total = 0;
   for (let declaration of DECLARATIONS.values()) {
-    contribution += declaration;
+    const employer = EMPLOYERS.get(declaration.employer_id);
+    if (!employer) continue;
+    const employee = employer.get_employee(declaration.employee_id);
+    if (employee) {
+      total += employee.contribution; 
+      total += employee.salary * 0.08;
+    }
   }
+  return total;
 }
 
-
+/**
+ * Finds the employer with the highest total contribution.
+ * @returns {Employer | null} The employer with highest contribution or null if no employers exist
+ */
 export function get_highest_contributing_employer() {
-    let highest_contribution = 0;
-    let highest_employer = null;
-    for (let employer of EMPLOYERS.values()) {
-        let contribution = get_employer_contribution(employer.id);
-        if (contribution > highest_contribution) {
-            highest_contribution = contribution;
-            highest_employer = employer;
-        }
+  let highest_contribution = 0;
+  let highest_employer = null;
+  for (let employer of EMPLOYERS.values()) {
+    let contribution = get_employer_contribution(employer.id);
+    if (contribution > highest_contribution) {
+      highest_contribution = contribution;
+      highest_employer = employer;
     }
-    return highest_employer;
+  }
+  return highest_employer;
 }
