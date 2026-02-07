@@ -56,7 +56,10 @@ export function generateRandomDataset({
       delete employer.contribution;
     } catch (e) {}
 
-    const numEmployees = faker.number.int({ min: minEmployees, max: maxEmployees });
+    const numEmployees = faker.number.int({
+      min: minEmployees,
+      max: maxEmployees,
+    });
 
     for (let j = 0; j < numEmployees; j++) {
       const name = faker.person.fullName();
@@ -71,13 +74,16 @@ export function generateRandomDataset({
       employees.push(employee);
 
       // Generate random months declared for this employee (0..maxMonthsPerEmployee)
-      const monthsDeclared = faker.number.int({ min: 0, max: maxMonthsPerEmployee });
+      const monthsDeclared = faker.number.int({
+        min: 0,
+        max: maxMonthsPerEmployee,
+      });
       employee.months_declared = monthsDeclared;
 
       // Create declarations for random months (unique months)
       const months = faker.helpers.uniqueArray(
         () => faker.number.int({ min: 1, max: 12 }),
-        Math.min(monthsDeclared, 12)
+        Math.min(monthsDeclared, 12),
       );
 
       for (const month of months) {
@@ -103,6 +109,4 @@ const example_data = generateRandomDataset({
   seed: 42, // reproducible
 });
 
-export default example_data
-
-
+export default example_data;

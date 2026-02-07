@@ -3,13 +3,13 @@ import Dashboard from "../pages/Dashboard";
 import Declaration from "../pages/déclaration";
 import Employeurs from "../pages/Employeurs";
 import Assures from "../pages/assures";
-import historique from "../pages/Historique";
+import Historique from "../pages/Historique";
 const routes = {
   "/": Dashboard,
   "/declaration": Declaration,
   "/employeurs": Employeurs,
   "/assures": Assures,
-  "/historique":historique
+  "/historique":Historique
 };
 
 // create root element and style element for page styles
