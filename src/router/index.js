@@ -1,25 +1,30 @@
-import { html, select } from "../utils/index";
+import { html, select, sleep } from "../utils/index";
 import Dashboard from "../pages/Dashboard";
 import Declaration from "../pages/déclaration";
 import Employeurs from "../pages/Employeurs";
 import Assures from "../pages/assures";
-import historique from "../pages/Historique";
+import Historique from "../pages/Historique";
 const routes = {
   "/": Dashboard,
   "/declaration": Declaration,
   "/employeurs": Employeurs,
   "/assures": Assures,
-  "/historique":historique
+  "/historique":Historique
 };
 
 // create root element and style element for page styles
 const root = select("#app");
 const page_style = document.createElement("style");
 document.head.appendChild(page_style);
-
-function navigate(path) {
-  history.pushState({}, "", path);
+async function navigate(path) {
+  root.classList.add("exit");
+  await sleep(300);
+  window.history.pushState(null, null, path);
   render(path);
+  root.classList.remove("exit");
+  root.classList.add("enter");
+  await sleep(300); 
+  root.classList.remove("enter");
 }
 
 function render(path) {
@@ -38,6 +43,7 @@ function render(path) {
 }
 window.addEventListener("popstate", () => {
   render(window.location.pathname);
+  toggle_active_link(window.location.pathname);
 });
 document.addEventListener("click", (e) => {
   const link = e.target.closest && e.target.closest("[data-link]");
@@ -45,6 +51,18 @@ document.addEventListener("click", (e) => {
   e.preventDefault();
   const path = link.getAttribute("href");
   if (path) navigate(path);
-  else alert("no path");
+  toggle_active_link(path);
 });
+
+function toggle_active_link(path) {
+  const links = document.querySelectorAll("[data-link]");
+  links.forEach((link) => {
+    if (link.getAttribute("href") === path) {
+      link.classList.add("active");
+    } else {
+      link.classList.remove("active");
+    }
+  });
+}
+
 render(window.location.pathname);

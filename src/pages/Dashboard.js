@@ -1,34 +1,65 @@
+import example_data from "../utils/data";
 import { css, html } from "../utils/index";
 function template() {
   return html`
+    <header>
+      <h1 class="heading">Tableau de bord</h1>
+    </header>
     <section class="dashboard">
       <div class="cards">
         <div class="card">
+          <div>
+            <p class="title">Total Cotisations</p>
+            <p class="price">
+              ${calcul_total_contribution(
+                example_data.employees,
+                example_data.employers,
+              ).toLocaleString("en-US", {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2,
+              })}
+              MAD
+            </p>
+            <p>Montant total collecté</p>
+          </div>
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
+            width="30"
+            height="30"
             viewBox="0 0 24 24"
             fill="none"
             stroke="#6366f1"
             stroke-width="2"
             stroke-linecap="round"
             stroke-linejoin="round"
-            class="lucide lucide-activity-icon lucide-activity"
+            class="lucide lucide-file-minus-icon lucide-file-minus"
           >
             <path
-              d="M22 12h-2.48a2 2 0 0 0-1.93 1.46l-2.35 8.36a.25.25 0 0 1-.48 0L9.24 2.18a.25.25 0 0 0-.48 0l-2.35 8.36A2 2 0 0 1 4.49 12H2"
+              d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"
             />
+            <path d="M14 2v5a1 1 0 0 0 1 1h5" />
+            <path d="M9 15h6" />
           </svg>
-          <p class="title">Total Cotisations</p>
-          <p class="price">28.397,91 DH</p>
-          <p>Montant total collecté</p>
         </div>
         <div class="card">
+          <div>
+            <p class="title">Salaire Moyen</p>
+            <p class="price">
+              ${calcul_avg_salaries(example_data.employees).toLocaleString(
+                "en-US",
+                {
+                  minimumFractionDigits: 2,
+                  maximumFractionDigits: 2,
+                },
+              )}
+              MAD
+            </p>
+            <p>MSur l'ensemble des assurés</p>
+          </div>
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
+            width="30"
+            height="30"
             viewBox="0 0 24 24"
             fill="none"
             stroke="#6366f1"
@@ -41,15 +72,17 @@ function template() {
             <circle cx="10" cy="8" r="5" />
             <path d="M22 20c0-3.37-2-6.5-4-8a5 5 0 0 0-.45-8.3" />
           </svg>
-          <p class="title">Total Cotisations</p>
-          <p class="price">28.397,91 DH</p>
-          <p>Montant total collecté</p>
         </div>
         <div class="card">
+          <div>
+            <p class="title">Top Employeur</p>
+            <p class="price">Tech Solutions SARL</p>
+            <p>Plus grand volume déclaré</p>
+          </div>
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
+            width="30"
+            height="30"
             viewBox="0 0 24 24"
             fill="none"
             stroke="#6366f1"
@@ -67,11 +100,9 @@ function template() {
             <path d="M6 5v16" />
             <circle cx="12" cy="9" r="2" />
           </svg>
-          <p class="title">Total Cotisations</p>
-          <p class="price">28.397,91 DH</p>
-          <p>Montant total collecté</p>
         </div>
       </div>
+      <canvas id="myChart"></canvas>
     </section>
   `;
 }
@@ -79,23 +110,94 @@ function template() {
 function styles() {
   return css`
     .dashboard {
-      padding: 1rem;
       background: var(--background);
+      padding: 1rem;
     }
     .dashboard .cards {
+      margin-top: 3rem;
       width: 100%;
       display: grid;
       grid-template-columns: auto auto auto;
       gap: 1rem;
     }
+    .dashboard .heading {
+      width: 100%;
+    }
+    .dashboard .cards .card {
+      background-color: var(--card);
+      padding: 2rem;
+      border-radius: 10px;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+    }
+
+    .dashboard .cards .card p:first-child,
+    .dashboard .cards .card p:last-child {
+      color: var(--muted-foreground);
+      font-weight: 500;
+    }
+    .dashboard .cards .card p:nth-child(2) {
+      font-weight: bold;
+      font-size: 1.5rem;
+      margin: 0.2rem;
+    }
+    #myChart {
+      margin-top: 2rem;
+    }
   `;
 }
 
 function script() {
-  document.querySelector("button")?.addEventListener("click", () => {
-    alert("Button clicked!");
+  const ctx = document.getElementById("myChart");
+  new Chart(ctx, {
+    type: "bar",
+    data: {
+      labels: ["Red", "Blue", "Yellow", "Green"],
+      datasets: [
+        {
+          label: "My First Chart",
+          data: [12000, 1000, 10000, 7000],
+          backgroundColor: "#6366f1",
+          borderWidth: 2,
+        },
+      ],
+    },
+    options: {
+      events: ["click"],
+      scales: {
+        y: {
+          // defining min and max so hiding the dataset does not change scale range
+          min: 0,
+          max: 16000,
+        },
+      },
+    },
   });
 }
+
+function calcul_avg_salaries(employees) {
+  return Math.round(
+    employees.reduce((sum, emp) => sum + emp.salary, 0) / employees.length,
+  );
+}
+
+function calcul_total_contribution(employers, employees) {
+  return (
+    employers.reduce((total, employer) => total + employer.contribution, 0) +
+    employees.reduce((total, employe) => total + employe.contribution, 0)
+  );
+}
+
+console.log(
+  calcul_total_contribution(example_data.employers, example_data.employees),
+);
+
+// function get_top_employer(declarations) {
+//   declarations.reduce((max, curr) => {
+//     return curr.month > max.month ? curr : max;
+//   });
+// }
 
 const Dashboard = { template, styles, script };
 
