@@ -61,6 +61,10 @@ Quick Links: [Employee Functions](#employee-functions) | [Employer Functions](#e
 
 ### Employer Functions
 
+#### [get_all_employers()](src/lib/functions.js#L98)
+**Description:** Get an array of all employers in the system.
+**Returns:** `Employer[]`
+
 #### [get_employer_by_id(employer_id)](src/lib/functions.js#L76)
 **Description:** Retrieve an employer object by their ID.  
 **Returns:** `Employer | null`

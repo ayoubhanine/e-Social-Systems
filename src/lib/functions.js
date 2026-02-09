@@ -92,6 +92,9 @@ export function get_employer_by_id(employer_id) {
 }
 
 
+/**
+ * @returns {Employer[]}
+ */
 export function get_all_employers(){
   let employers = []
   for(let employer of EMPLOYERS.values()){
