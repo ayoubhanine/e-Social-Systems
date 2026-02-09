@@ -91,6 +91,17 @@ export function get_employer_by_id(employer_id) {
   return EMPLOYERS.get(employer_id) || null;
 }
 
+
+export function get_all_employers(){
+  let employers = []
+  for(let employer of EMPLOYERS.values()){
+    employers.push(employer)
+  }
+  return employers
+}
+
+
+
 /**
  * Adds an employer to the employers map.
  * @param {Employer} employer
