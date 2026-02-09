@@ -1,13 +1,10 @@
 import { css, html } from "../utils/index";
 
-
-
-
 function template() {
   return html`
     <section class="employeurs-page">
       <h1 class="main-title">Gestion Des Employeurs</h1>
-      
+
       <div class="employeurs-container">
         <div class="page-header">
           <h2 class="page-title">Liste des sociétés affiliées</h2>
@@ -45,20 +42,32 @@ function template() {
         </div>
       </div>
 
- <!-- Modal Ajouter Employeur -->
-          <div class="modal-overlay" id="modalOverlay">
+      <!-- Modal Ajouter Employeur -->
+      <div class="modal-overlay" id="modalOverlay">
         <div class="modal">
           <h2 class="modal-title">Nouvel Employeur</h2>
-          
+
           <form class="modal-form" id="formAddEmployeur">
             <div class="form-group">
               <label class="form-label">ID Fiscal / RC</label>
-              <input type="text" class="form-input" id="inputIdFiscal" placeholder="" required>
+              <input
+                type="text"
+                class="form-input"
+                id="inputIdFiscal"
+                placeholder=""
+                required
+              />
             </div>
 
             <div class="form-group">
               <label class="form-label">Raison Sociale</label>
-              <input type="text" class="form-input" id="inputRaisonSociale" placeholder="" required>
+              <input
+                type="text"
+                class="form-input"
+                id="inputRaisonSociale"
+                placeholder=""
+                required
+              />
             </div>
 
             <div class="form-group">
@@ -73,14 +82,14 @@ function template() {
             </div>
 
             <div class="modal-actions">
-              <button type="button" class="btn-cancel" id="btnCancel">Annuler</button>
+              <button type="button" class="btn-cancel" id="btnCancel">
+                Annuler
+              </button>
               <button type="submit" class="btn-submit">Enregistrer</button>
             </div>
           </form>
         </div>
       </div>
-
-   
     </section>
   `;
 }
@@ -121,7 +130,7 @@ function styles() {
     }
 
     .btn-add {
-      background-color: #4169E1;
+      background-color: #4169e1;
       color: white;
       border: none;
       padding: 10px 24px;
@@ -204,7 +213,7 @@ function styles() {
       font-weight: 500;
     }
 
-/* ========== MODAL STYLES ========== */
+    /* ========== MODAL STYLES ========== */
     .modal-overlay {
       display: none;
       position: fixed;
@@ -269,7 +278,7 @@ function styles() {
     .form-input:focus,
     .form-select:focus {
       outline: none;
-      border-color: #4169E1;
+      border-color: #4169e1;
     }
 
     .form-select {
@@ -302,7 +311,7 @@ function styles() {
 
     .btn-submit {
       padding: 10px 24px;
-      background-color: #4169E1;
+      background-color: #4169e1;
       color: white;
       border: none;
       border-radius: 6px;
@@ -315,78 +324,60 @@ function styles() {
     .btn-submit:hover {
       background-color: #3457c4;
     }
-
-
   `;
 }
 
 function script() {
-  const btnAdd = document.getElementById('btnAddEmployeur');
-  const btnCancel = document.getElementById('btnCancel');
-  const modalOverlay = document.getElementById('modalOverlay');
-  const form = document.getElementsByName('formAddEmployeur');
-  
-
-  // Open modal
-  btnAdd?.addEventListener('click', () => {
-    modalOverlay.classList.add('active');
-
-  });
-
-  // Close modal
-  btnCancel?.addEventListener('click',()=>{
-    modalOverlay.classList.remove('active');
-    form.reset();
-  });
-
-  // Close modal ila clickiti barra
-  modalOverlay?.addEventListener('click',(e)=>{
-    if (e.target === modalOverlay){
-      modalOverlay.classList.remove('active');
-      form.reset();
-      
-    }
-  });
-
-  // Submit form
-form?.addEventListener('submit',(e)=>{
-  e.preventDefault();
-})
-    const idFiscal = document.getElementById('inputIdFiscal').value;
-    const raisonSociale = document.getElementById('inputRaisonSociale').value;
-    const secteur = document.getElementById('selectSecteur').value;
-
-
-   // Générer ID automatique
-  const tbody = document.getElementById('employeursTableBody');
-  const rowCount = tbody.querySelectorAll('tr').length;
-  const newId = `EMP${String(rowCount + 1).padStart(3, '0')}`;
-
-    // Ajouter f table
-    addEmloyeurToTable(newId,raisonSociale,secteur, 0);
-
-
-    // Close modal o reset form
-    modalOverlay.classList.remove('active');
-    form.reset();
-
-    console.log('Employeur ajouté:', { idFiscal, raisonSociale, secteur });
-  
-    // Table row click
-    document.querySelectorAll('#employeursTableBody tr').forEach (row => {
-    row.addEventListener('click', () => {
-      const id = row.querySelector('.id-cell').textContent;
-      console.log('Ligne cliquée:', id);
-    });
-})
-
-
-  document.querySelectorAll('#employeursTableBody tr').forEach(row => {
-    row.addEventListener('click', () => {
-      const id = row.querySelector('.id-cell').textContent;
-      console.log('Ligne cliquée:', id);
-    });
-  });
+  // const btnAdd = document.getElementById("btnAddEmployeur");
+  // const btnCancel = document.getElementById("btnCancel");
+  // const modalOverlay = document.getElementById("modalOverlay");
+  // const form = document.getElementById("formAddEmployeur");
+  // // Open modal
+  // btnAdd?.addEventListener("click", () => {
+  //   modalOverlay.classList.add("active");
+  // });
+  // // Close modal
+  // btnCancel?.addEventListener("click", () => {
+  //   modalOverlay.classList.remove("active");
+  //   form.reset();
+  // });
+  // // Close modal ila clickiti barra
+  // modalOverlay?.addEventListener("click", (e) => {
+  //   if (e.target === modalOverlay) {
+  //     modalOverlay.classList.remove("active");
+  //     form.reset();
+  //   }
+  // });
+  // // Submit form
+  // form?.addEventListener("submit", (e) => {
+  //   e.preventDefault();
+  // });
+  // const idFiscal = document.getElementById("inputIdFiscal").value;
+  // const raisonSociale = document.getElementById("inputRaisonSociale").value;
+  // const secteur = document.getElementById("selectSecteur").value;
+  // // Générer ID automatique
+  // const tbody = document.getElementById("employeursTableBody");
+  // const rowCount = tbody.querySelectorAll("tr").length;
+  // const newId = `EMP${String(rowCount + 1).padStart(3, "0")}`;
+  // // Ajouter f table
+  // addEmloyeurToTable(newId, raisonSociale, secteur, 0);
+  // // Close modal o reset form
+  // modalOverlay.classList.remove("active");
+  // form.reset();
+  // console.log("Employeur ajouté:", { idFiscal, raisonSociale, secteur });
+  // // Table row click
+  // document.querySelectorAll("#employeursTableBody tr").forEach((row) => {
+  //   row.addEventListener("click", () => {
+  //     const id = row.querySelector(".id-cell").textContent;
+  //     console.log("Ligne cliquée:", id);
+  //   });
+  // });
+  // document.querySelectorAll("#employeursTableBody tr").forEach((row) => {
+  //   row.addEventListener("click", () => {
+  //     const id = row.querySelector(".id-cell").textContent;
+  //     console.log("Ligne cliquée:", id);
+  //   });
+  // });
 }
 
 const Employeurs = {
@@ -394,8 +385,5 @@ const Employeurs = {
   styles,
   script,
 };
-
-
-
 
 export default Employeurs;
