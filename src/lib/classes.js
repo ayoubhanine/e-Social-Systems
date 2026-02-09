@@ -18,9 +18,8 @@ export class Employer {
   /**
    * @param {keyof typeof sectors} sector
    * @param {string} company_name
-   * @param {number} income_per_month
    */
-  constructor(sector, company_name, income_per_month) {
+  constructor(sector, company_name) {
     this.id = generate_id();
     this.sector = sector;
     if (!sectors[sector]) {
@@ -29,7 +28,6 @@ export class Employer {
     this.company_name = company_name;
     /** @type {Set<Employee>} */
     this.employees = new Set();
-    this.income_per_month = income_per_month;
     this.penalties = 0;
   }
   /**
