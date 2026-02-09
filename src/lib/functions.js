@@ -15,6 +15,8 @@ export function get_employee_by_id(employee_id) {
   return null;
 }
 
+
+
 /**
  *
  * @returns {Employee[]} Array of all employees
@@ -97,6 +99,7 @@ export function get_employer_by_id(employer_id) {
  */
 export function get_all_employers(){
   let employers = []
+  
   for(let employer of EMPLOYERS.values()){
     employers.push(employer)
   }
