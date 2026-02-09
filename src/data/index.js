@@ -7,6 +7,4 @@ const EMPLOYERS = new Map();
  * @type {Map<string,Declaration>}
  */
 const DECLARATIONS = new Map();
-
 export { EMPLOYERS, DECLARATIONS };
-
