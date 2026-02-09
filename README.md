@@ -182,10 +182,7 @@ Quick Links: [Employee Functions](#employee-functions) | [Employer Functions](#e
 
 ### Keep branch up to date
 ```sh
-git checkout main
-git pull origin main
-git checkout feature/your-branch-name
-git merge main
+git pull origin main  // this will pull the latest changes from the main branch into your current branch
 npm install 
 ```
 
