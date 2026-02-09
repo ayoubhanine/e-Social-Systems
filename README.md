@@ -32,19 +32,19 @@ Quick Links: [Employee Functions](#employee-functions) | [Employer Functions](#e
 
 ### Employee Functions
 
-#### [get_employee_by_id(employee_id)](src/lib/functions.js#L7)
+#### [get_employee_by_id(employee_id)](src/lib/functions.js#L10)
 **Description:** Retrieve an employee object by their ID across all employers.  
 **Returns:** `Employee | null`
 
-#### [get_all_employees()](src/lib/functions.js#L16)
+#### [get_all_employees()](src/lib/functions.js#L21)
 **Description:** Get an array of all employees from all employers.  
 **Returns:** `Employee[]`
 
-#### [get_employee_rights(employee_id)](src/lib/functions.js#L26)
+#### [get_employee_rights(employee_id)](src/lib/functions.js#L33)
 **Description:** Calculate total contributions (employee + employer) for a specific employee.  
 **Returns:** `number | null`
 
-#### [add_employee(employer_id, employee)](src/lib/functions.js#L47)
+#### [add_employee(employer_id, employee)](src/lib/functions.js#L59)
 **Description:** Add an employee to a specific employer.  
 **Parameters:**
 - `employer_id` (string)
@@ -52,7 +52,7 @@ Quick Links: [Employee Functions](#employee-functions) | [Employer Functions](#e
 
 **Throws:** Error if employer not found or invalid employee
 
-#### [get_employee_contribution(employee_id)](src/lib/functions.js#L90)
+#### [get_employee_contribution(employee_id)](src/lib/functions.js#L126)
 **Description:** Calculate total employee contribution across all their declarations.  
 **Returns:** `number`  
 **Throws:** Error if employee not found
@@ -62,27 +62,27 @@ Quick Links: [Employee Functions](#employee-functions) | [Employer Functions](#e
 ### Employer Functions
 
 #### [get_all_employers()](src/lib/functions.js#L98)
-**Description:** Get an array of all employers in the system.
+**Description:** Get an array of all employers in the system.  
 **Returns:** `Employer[]`
 
-#### [get_employer_by_id(employer_id)](src/lib/functions.js#L76)
+#### [get_employer_by_id(employer_id)](src/lib/functions.js#L88)
 **Description:** Retrieve an employer object by their ID.  
 **Returns:** `Employer | null`
 
-#### [add_employer(employer)](src/lib/functions.js#L83)
+#### [add_employer(employer)](src/lib/functions.js#L113)
 **Description:** Add an employer to the system.  
 **Parameters:** `employer` (Employer instance)  
 **Throws:** Error if invalid employer
 
-#### [get_employer_contribution(employer_id)](src/lib/functions.js#L103)
+#### [get_employer_contribution(employer_id)](src/lib/functions.js#L142)
 **Description:** Calculate total employer contribution for all their declarations.  
 **Returns:** `number`
 
-#### [get_highest_contributing_employer()](src/lib/functions.js#L170)
+#### [get_highest_contributing_employer()](src/lib/functions.js#L189)
 **Description:** Find the employer with the highest total contribution.  
 **Returns:** `Employer | null`
 
-#### [get_average_employee_salary()](src/lib/functions.js#L181)
+#### [get_average_employee_salary()](src/lib/functions.js#L201)
 **Description:** Calculate the average salary of all employees across all employers.  
 **Returns:** `number`
 
@@ -90,7 +90,7 @@ Quick Links: [Employee Functions](#employee-functions) | [Employer Functions](#e
 
 ### Declaration Functions
 
-#### [add_declaration(declaration)](src/lib/functions.js#L61)
+#### [add_declaration(declaration)](src/lib/functions.js#L77)
 **Description:** Add a declaration to the system.  
 **Parameters:** `declaration` (Declaration instance)  
 **Throws:** Error if invalid declaration
@@ -99,11 +99,11 @@ Quick Links: [Employee Functions](#employee-functions) | [Employer Functions](#e
 
 ### Statistics Functions
 
-#### [get_total_contributions()](src/lib/functions.js#L150)
+#### [get_total_contributions()](src/lib/functions.js#L173)
 **Description:** Calculate the total of all contributions (employee + employer) across all declarations.  
 **Returns:** `number`
 
-#### [get_days_between_dates(d1, d2)](src/lib/functions.js#L120)
+#### [get_days_between_dates(d1, d2)](src/lib/functions.js#L160)
 **Description:** Calculate the number of days between two dates.  
 **Parameters:**
 - `d1` (Date)
