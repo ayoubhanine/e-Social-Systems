@@ -1,8 +1,10 @@
 import { css, html, select } from "../utils/index";
-import { get_all_employers } from "../lib/functions";
+import { get_all_employers, get_employer_by_id } from "../lib/functions";
 import { generateExampleData } from "../utils/example";
+import { Declaration } from "../lib/classes";
+import { DECLARATIONS } from "../data";
 const now = `${get_now().getFullYear()}-${String(get_now().getMonth() + 1).padStart(2, "0")}`;
-generateExampleData();
+generateExampleData(3, 3, 3);
 function template() {
   return html`
     <section class="historique">
@@ -32,7 +34,21 @@ function template() {
           </div>
           <button id="reset_filters">Réinitialiser</button>
         </div>
-        <hr />
+
+        <div class="historique__grid">
+          <div class="grid-header">
+            <div class="grid-cell header-cell">Mois</div>
+            <div class="grid-cell header-cell">Employeur</div>
+            <div class="grid-cell header-cell">Total Cotisé</div>
+            <div class="grid-cell header-cell">Pénalités</div>
+            <div class="grid-cell header-cell">Salarie</div>
+          </div>
+          <div id="historique__tbody">
+            ${Array.from(DECLARATIONS.values())
+              .map((declaration) => create_row(declaration))
+              .join("\n")}
+          </div>
+        </div>
       </main>
     </section>
   `;
@@ -42,15 +58,17 @@ function styles() {
   return css`
     .historique {
       main {
-        padding: 1.3rem;
+        padding: 0 1.3rem;
       }
       .filters {
         display: flex;
         align-items: center;
+        margin: 1rem 0 2rem 0;
         gap: 0 1rem;
       }
       .filter {
         display: flex;
+        align-items: center;
         gap: 0.5rem;
       }
       input,
@@ -64,7 +82,7 @@ function styles() {
         width: 12rem;
         height: 2.5rem;
         font-size: 0.9rem;
-        cursor:pointer;
+        cursor: pointer;
       }
       input:active,
       input:focus,
@@ -98,13 +116,68 @@ function styles() {
         background-color: var(--primary);
         color: var(--primary-foreground);
       }
-      hr {
-        margin: 1rem 0;
-        height: 0.2px;
-        border: none;
-        border-radius: 10px;
-        background-color: var(--muted-foreground);
-        opacity: 0.5;
+
+      .historique__grid {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 0;
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        overflow: hidden;
+        background-color: var(--card);
+        box-shadow: var(--shadow-xs);
+        margin-bottom: 2rem;
+      }
+      .grid-header {
+        display: contents;
+      }
+      #historique__tbody {
+        display: contents;
+      }
+      .header-cell {
+        background-color: color-mix(in srgb, var(--primary) 10%, var(--card));
+        font-weight: 600;
+        color: var(--foreground);
+        padding: 1rem;
+        border-right: 1px solid var(--border);
+        border-bottom: 2px solid var(--border);
+        font-size: 0.8rem;
+      }
+
+      .header-cell:last-child {
+        border-right: none;
+      }
+      .grid-row {
+        display: contents;
+      }
+
+      .grid-cell {
+        padding: 0.75rem 1rem;
+        border-right: 1px solid var(--border);
+        border-bottom: 1px solid var(--border);
+        color: var(--foreground);
+        display: flex;
+        font-size: 0.8rem;
+        align-items: center;
+      }
+      .grid-cell.employer-name {
+        font-weight: 500;
+        word-wrap: normal;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+      }
+      .grid-cell.total-contribution {
+        color: darkgreen;
+        font-weight: 500;
+      }
+      .grid-cell.penalty {
+        color: var(--destructive);
+      }
+      .grid-cell:last-child {
+        border-right: none;
+      }
+      .grid-row:last-child .grid-cell {
+        border-bottom: none;
       }
     }
   `;
@@ -145,6 +218,40 @@ function reset_filters_handler() {
   employer_select.value = "";
   employer_select.setAttribute("applied", "false");
 }
+
+function get_now() {
+  return new Date();
+}
+
+/**
+ * Create a row for a given declaration
+ * @param {Declaration} declaration
+ * @returns {string}
+ */
+function create_row(declaration) {
+  let employer = get_employer_by_id(declaration.employer_id);
+  return html`
+    <div class="grid-row">
+      <div class="grid-cell month">
+        ${new Date(declaration.date).toLocaleDateString("fr-FR", {
+          month: "short",
+          year: "numeric",
+        })}
+      </div>
+      <div class="grid-cell employer-name">${employer.company_name}</div>
+      <div class="grid-cell total-contribution">
+        +${declaration.total_contribution} DH
+      </div>
+      <div class="grid-cell penalty">
+        ${declaration.penalties > 0 ? "-" + declaration.penalties+" DH" : "-"}
+      </div>
+      <div class="grid-cell employee-count">
+        ${get_employer_by_id(declaration.employer_id).employee_count} 
+      </div>
+    </div>
+  `;
+}
+
 function cleanup() {
   const page = select(".historique");
   const month_input = page.querySelector("input[type='month']");
@@ -153,10 +260,6 @@ function cleanup() {
   employer_select?.removeEventListener("change", select_employer_handler);
   const reset_filters_btn = page.querySelector("#reset_filters");
   reset_filters_btn?.removeEventListener("click", reset_filters_handler);
-}
-
-function get_now() {
-  return new Date();
 }
 const Historique = {
   template,
