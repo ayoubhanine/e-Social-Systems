@@ -20,7 +20,7 @@ function template(){
 
                 <div class="field">
                     <label>Mois</label>
-                    <input type="month" value="2026-02" />
+                    <input type="date" value="2026-02" />
                 </div>
 
                 <button id="declare-btn" class="declare-btn">
@@ -35,80 +35,85 @@ function template(){
 
 function styles(){
     return css`
+*{
+  box-sizing: border-box;
+}
+
 .declarations-page {
-      padding: 2rem;
-    }
+  padding: 32px;
+}
 
-    .declarations-page h1 {
-      font-size: 1.8rem;
-      font-weight: 700;
-      margin-bottom: 1.5rem;
-    }
+.declarations-page h1 {
+  font-size: 28.8px;
+  font-weight: 700;
+  margin-bottom: 24px;
+}
 
-    .declaration-card {
-        margin-top:40px;
-        background: var(--card);
-        border-radius: 1rem;
-        padding: 1.5rem 2rem;
-        max-width: 1200px;
-        box-shadow: var(--shadow-lg);
-    }
+.declaration-card {
+  margin-top: 40px;
+  background: var(--card);
+  border-radius: 16px;
+  padding: 24px 32px;
+  max-width: 1200px;
+  box-shadow: var(--shadow-lg);
+}
 
-    .card-header {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      margin-bottom: 1.5rem;
-    }
+.card-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 24px;
+}
 
-    .card-header h2 {
-      font-size: 1.1rem;
-      font-weight: 600;
-    }
+.card-header h2 {
+  font-size: 17.6px;
+  font-weight: 600;
+}
 
-    .card-body {
-      display: grid;
-      grid-template-columns: 1fr 1fr auto;
-      gap: 1.25rem;
-      align-items: end;
-    }
+.card-body {
+  display: grid;
+  grid-template-columns: 1fr 1fr auto;
+  gap: 20px;
+  align-items: end;
+}
 
-    .field {
-      display: flex;
-      flex-direction: column;
-      gap: 0.25rem;
-    }
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
 
-    label {
-      font-size: 0.9rem;
-      font-weight: 500;
-      color: var(--muted-foreground);
-    }
+label {
+  font-size: 14.4px;
+  font-weight: 500;
+  color: var(--muted-foreground);
+}
 
-    select,
-    input {
-      padding: 0.55rem 0.75rem;
-      border-radius: var(--radius);
-      border: 1px solid var(--border);
-      background: var(--background);
-    }
+select,
+input {
+  padding: 8.8px 12px;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  background: var(--background);
+}
 
-    .declare-btn {
-      display:flex;
-      gap: 0.75rem;
-      background: #22c55e;
-      color: white;
-      border: none;
-      padding: 0.6rem 1.3rem;
-      border-radius: var(--radius);
-      font-weight: 600;
-      cursor: pointer;
-      white-space: nowrap;
-    }
+.declare-btn {
+  display: flex;
+  gap: 12px;
+  background: #22c55e;
+  color: white;
+  border: none;
+  padding: 9.6px 20.8px;
+  border-radius: var(--radius);
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+}
 
-    .declare-btn:hover {
-      opacity: 0.9;
-    }
+.declare-btn:hover {
+  opacity: 0.9;
+}
+
     `;
 }
 
