@@ -1,3 +1,4 @@
+import example_data from "../utils/data";
 import { css, html } from "../utils/index";
 function template() {
   return html`
@@ -9,7 +10,16 @@ function template() {
         <div class="card">
           <div>
             <p class="title">Total Cotisations</p>
-            <p class="price">28.397,91 DH</p>
+            <p class="price">
+              ${calcul_total_contribution(
+                example_data.employees,
+                example_data.employers,
+              ).toLocaleString("en-US", {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2,
+              })}
+              MAD
+            </p>
             <p>Montant total collecté</p>
           </div>
           <svg
@@ -34,7 +44,16 @@ function template() {
         <div class="card">
           <div>
             <p class="title">Salaire Moyen</p>
-            <p class="price">5.500 DH</p>
+            <p class="price">
+              ${calcul_avg_salaries(example_data.employees).toLocaleString(
+                "en-US",
+                {
+                  minimumFractionDigits: 2,
+                  maximumFractionDigits: 2,
+                },
+              )}
+              MAD
+            </p>
             <p>MSur l'ensemble des assurés</p>
           </div>
           <svg
@@ -131,7 +150,6 @@ function styles() {
 
 function script() {
   const ctx = document.getElementById("myChart");
-
   new Chart(ctx, {
     type: "bar",
     data: {
@@ -157,6 +175,29 @@ function script() {
     },
   });
 }
+
+function calcul_avg_salaries(employees) {
+  return Math.round(
+    employees.reduce((sum, emp) => sum + emp.salary, 0) / employees.length,
+  );
+}
+
+function calcul_total_contribution(employers, employees) {
+  return (
+    employers.reduce((total, employer) => total + employer.contribution, 0) +
+    employees.reduce((total, employe) => total + employe.contribution, 0)
+  );
+}
+
+console.log(
+  calcul_total_contribution(example_data.employers, example_data.employees),
+);
+
+// function get_top_employer(declarations) {
+//   declarations.reduce((max, curr) => {
+//     return curr.month > max.month ? curr : max;
+//   });
+// }
 
 const Dashboard = { template, styles, script };
 
