@@ -211,7 +211,6 @@ function script() {
       plugins: {
         tooltip: {
           callbacks: {
-            // Show company name f tooltip
             afterLabel: function (context) {
               const index = context.dataIndex;
               return `Company: ${chartData[index].company}`;
