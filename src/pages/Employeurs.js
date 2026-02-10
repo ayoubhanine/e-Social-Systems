@@ -1,3 +1,6 @@
+import { EMPLOYERS } from "../data";
+import { Employer } from "../lib/classes";
+import { add_employer } from "../lib/functions";
 import { css, html } from "../utils/index";
 
 function template() {
@@ -24,20 +27,7 @@ function template() {
                 <th>Employés</th>
               </tr>
             </thead>
-            <tbody id="employeursTableBody">
-              <tr>
-                <td class="id-cell">EMP001</td>
-                <td class="company-name">Tech Solutions SARL</td>
-                <td><span class="badge">Technologie</span></td>
-                <td class="employee-count">2</td>
-              </tr>
-              <tr>
-                <td class="id-cell">EMP002</td>
-                <td class="company-name">Atlas Construction</td>
-                <td><span class="badge">Industrie</span></td>
-                <td class="employee-count">1</td>
-              </tr>
-            </tbody>
+            <tbody id="employeursTableBody"></tbody>
           </table>
         </div>
       </div>
@@ -49,23 +39,11 @@ function template() {
 
           <form class="modal-form" id="formAddEmployeur">
             <div class="form-group">
-              <label class="form-label">ID Fiscal / RC</label>
-              <input
-                type="text"
-                class="form-input"
-                id="inputIdFiscal"
-                placeholder=""
-                required
-              />
-            </div>
-
-            <div class="form-group">
               <label class="form-label">Raison Sociale</label>
               <input
                 type="text"
                 class="form-input"
                 id="inputRaisonSociale"
-                placeholder=""
                 required
               />
             </div>
@@ -328,56 +306,74 @@ function styles() {
 }
 
 function script() {
-  // const btnAdd = document.getElementById("btnAddEmployeur");
-  // const btnCancel = document.getElementById("btnCancel");
-  // const modalOverlay = document.getElementById("modalOverlay");
-  // const form = document.getElementById("formAddEmployeur");
-  // // Open modal
-  // btnAdd?.addEventListener("click", () => {
-  //   modalOverlay.classList.add("active");
-  // });
-  // // Close modal
-  // btnCancel?.addEventListener("click", () => {
-  //   modalOverlay.classList.remove("active");
-  //   form.reset();
-  // });
-  // // Close modal ila clickiti barra
-  // modalOverlay?.addEventListener("click", (e) => {
-  //   if (e.target === modalOverlay) {
-  //     modalOverlay.classList.remove("active");
-  //     form.reset();
-  //   }
-  // });
-  // // Submit form
-  // form?.addEventListener("submit", (e) => {
-  //   e.preventDefault();
-  // });
-  // const idFiscal = document.getElementById("inputIdFiscal").value;
-  // const raisonSociale = document.getElementById("inputRaisonSociale").value;
-  // const secteur = document.getElementById("selectSecteur").value;
-  // // Générer ID automatique
-  // const tbody = document.getElementById("employeursTableBody");
-  // const rowCount = tbody.querySelectorAll("tr").length;
-  // const newId = `EMP${String(rowCount + 1).padStart(3, "0")}`;
-  // // Ajouter f table
-  // addEmloyeurToTable(newId, raisonSociale, secteur, 0);
-  // // Close modal o reset form
-  // modalOverlay.classList.remove("active");
-  // form.reset();
-  // console.log("Employeur ajouté:", { idFiscal, raisonSociale, secteur });
-  // // Table row click
-  // document.querySelectorAll("#employeursTableBody tr").forEach((row) => {
-  //   row.addEventListener("click", () => {
-  //     const id = row.querySelector(".id-cell").textContent;
-  //     console.log("Ligne cliquée:", id);
-  //   });
-  // });
-  // document.querySelectorAll("#employeursTableBody tr").forEach((row) => {
-  //   row.addEventListener("click", () => {
-  //     const id = row.querySelector(".id-cell").textContent;
-  //     console.log("Ligne cliquée:", id);
-  //   });
-  // });
+  const btnAdd = document.getElementById("btnAddEmployeur");
+  const btnCancel = document.getElementById("btnCancel");
+  const modalOverlay = document.getElementById("modalOverlay");
+  const form = document.getElementById("formAddEmployeur");
+
+  function displayEmployers() {
+    const tbody = document.getElementById("employeursTableBody");
+
+    EMPLOYERS.forEach(({ id, company_name, employee_count, sector }) => {
+      const row = document.createElement("tr");
+      row.innerHTML = `
+      <td class="id-cell">${id}</td>
+      <td class="company-name">${company_name}</td>
+      <td><span class="badge">${sector}</span></td>
+      <td class="employee-count">${employee_count}</td>
+      `;
+      tbody.appendChild(row);
+    });
+  }
+
+  displayEmployers();
+
+  // Open modal
+  btnAdd?.addEventListener("click", () => {
+    modalOverlay.classList.add("active");
+  });
+
+  // Close modal b button Annuler
+  btnCancel?.addEventListener("click", () => {
+    modalOverlay.classList.remove("active");
+    form.reset();
+  });
+
+  // Close modal ila clickiti barra
+  modalOverlay?.addEventListener("click", (e) => {
+    if (e.target === modalOverlay) {
+      modalOverlay.classList.remove("active");
+      form.reset();
+    }
+  });
+
+  // Submit form
+  form?.addEventListener("submit", (e) => {
+    e.preventDefault();
+
+    // Hna ghadi njibo l-values mn inputs
+
+    const raisonSociale = document.getElementById("inputRaisonSociale").value;
+    const secteur = document.getElementById("selectSecteur").value;
+
+    // Ajouter f table
+    const employer = new Employer(secteur, raisonSociale);
+
+    add_employer(employer);
+
+    displayEmployers();
+
+    modalOverlay.classList.remove("active");
+    form.reset();
+  });
+
+  // Table row click
+  document.querySelectorAll("#employeursTableBody tr").forEach((row) => {
+    row.addEventListener("click", () => {
+      const id = row.querySelector(".id-cell").textContent;
+      console.log("Ligne cliquée:", id);
+    });
+  });
 }
 
 const Employeurs = {
