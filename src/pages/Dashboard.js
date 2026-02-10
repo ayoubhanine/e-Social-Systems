@@ -1,20 +1,12 @@
+import { DECLARATIONS, EMPLOYERS } from "../data";
 import {
-  get_all_declarations,
-  get_all_employees,
-  get_all_employers,
   get_average_employee_salary,
-  get_employer_contribution,
   get_highest_contributing_employer,
   get_total_contributions,
 } from "../lib/functions";
-import example_data from "../utils/data";
 import { css, html } from "../utils/index";
 
 function template() {
-  // const employees = get_all_employees();
-  // const employers = get_all_employers();
-  // const declarations = get_all_declarations();
-
   const formated_total_contribution = new Intl.NumberFormat("fr-MA", {
     style: "currency",
     currency: "MAD",
@@ -111,7 +103,6 @@ function template() {
         </div>
       </div>
       <canvas id="myChart"></canvas>
-      <!-- <canvas id="Pies"></canvas> -->
     </section>
   `;
 }
@@ -158,25 +149,52 @@ function styles() {
 }
 
 function script() {
-  const getCurrentMonth = new Date().getMonth() + 1;
-  const getCurrentYear = new Date().getFullYear();
+  function getTopCompanyLast4Months() {
+    const today = new Date();
+    const fourMonthsAgo = new Date();
+    fourMonthsAgo.setMonth(today.getMonth() - 4);
 
-  console.log(getCurrentMonth);
-  console.log(getCurrentYear);
+    const grouped = {};
 
-  const ctx = document.getElementById("myChart");
-  const pies = document.getElementById("Pies");
+    for (const decl of DECLARATIONS.values()) {
+      const date = new Date(decl.date);
+
+      if (date < fourMonthsAgo || date > today) continue;
+
+      const month = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}`;
+      const company = EMPLOYERS.get(decl.employer_id).company_name;
+
+      grouped[month] = grouped[month] || {};
+      grouped[month][company] =
+        (grouped[month][company] || 0) + decl.total_contribution;
+    }
+
+    return Object.entries(grouped)
+      .map(([month, companies]) => {
+        const [topCompany, maxContribution] = Object.entries(companies).reduce(
+          (max, curr) => (curr[1] > max[1] ? curr : max),
+        );
+
+        return { month, company: topCompany, contribution: maxContribution };
+      })
+      .sort((a, b) => a.month.localeCompare(b.month));
+  }
+
+  const chartData = getTopCompanyLast4Months();
+
+  const labels = chartData.map((item) => item.month);
+  const contributions = chartData.map((item) => item.contribution);
+
+  const ctx = document.getElementById("myChart").getContext("2d");
+
   new Chart(ctx, {
     type: "bar",
     data: {
-      labels: [
-        `${getCurrentYear}-${getCurrentMonth}`,
-        `${getCurrentYear}-${getCurrentMonth - 1}`,
-      ],
+      labels: labels,
       datasets: [
         {
-          label: "My First Chart",
-          data: [1200000, 1000, 10000, 7000],
+          label: "Top Company Contribution",
+          data: contributions,
           backgroundColor: "#6366f1",
           borderWidth: 2,
         },
@@ -186,30 +204,21 @@ function script() {
       events: ["click"],
       scales: {
         y: {
-          // defining min and max so hiding the dataset does not change scale range
-          min: 10000,
-          // max: get_total_contributions(),
-          max: get_total_contributions(),
+          beginAtZero: true,
+          max: Math.max(...contributions) * 1.2,
         },
       },
-    },
-  });
-  new Chart(pies, {
-    type: "doughnut",
-    data: {
-      labels: ["Red", "Blue", "Yellow"],
-      datasets: [
-        {
-          label: "My First Dataset",
-          data: [300, 50, 100],
-          backgroundColor: [
-            "rgb(255, 99, 132)",
-            "rgb(54, 162, 235)",
-            "rgb(255, 205, 86)",
-          ],
-          hoverOffset: 4,
+      plugins: {
+        tooltip: {
+          callbacks: {
+            // Show company name f tooltip
+            afterLabel: function (context) {
+              const index = context.dataIndex;
+              return `Company: ${chartData[index].company}`;
+            },
+          },
         },
-      ],
+      },
     },
   });
 }
