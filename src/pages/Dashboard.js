@@ -1,6 +1,30 @@
+import {
+  get_all_declarations,
+  get_all_employees,
+  get_all_employers,
+  get_average_employee_salary,
+  get_employer_contribution,
+  get_highest_contributing_employer,
+  get_total_contributions,
+} from "../lib/functions";
 import example_data from "../utils/data";
 import { css, html } from "../utils/index";
+
 function template() {
+  // const employees = get_all_employees();
+  // const employers = get_all_employers();
+  // const declarations = get_all_declarations();
+
+  const formated_total_contribution = new Intl.NumberFormat("fr-MA", {
+    style: "currency",
+    currency: "MAD",
+  }).format(get_total_contributions());
+
+  const formated_avg = new Intl.NumberFormat("fr-MA", {
+    style: "currency",
+    currency: "MAD",
+  }).format(get_average_employee_salary());
+
   return html`
     <header>
       <h1 class="heading">Tableau de bord</h1>
@@ -10,16 +34,7 @@ function template() {
         <div class="card">
           <div>
             <p class="title">Total Cotisations</p>
-            <p class="price">
-              ${calcul_total_contribution(
-                example_data.employees,
-                example_data.employers,
-              ).toLocaleString("en-US", {
-                minimumFractionDigits: 2,
-                maximumFractionDigits: 2,
-              })}
-              MAD
-            </p>
+            <p class="price">${formated_total_contribution}</p>
             <p>Montant total collecté</p>
           </div>
           <svg
@@ -44,16 +59,7 @@ function template() {
         <div class="card">
           <div>
             <p class="title">Salaire Moyen</p>
-            <p class="price">
-              ${calcul_avg_salaries(example_data.employees).toLocaleString(
-                "en-US",
-                {
-                  minimumFractionDigits: 2,
-                  maximumFractionDigits: 2,
-                },
-              )}
-              MAD
-            </p>
+            <p class="price">${formated_avg}</p>
             <p>MSur l'ensemble des assurés</p>
           </div>
           <svg
@@ -76,7 +82,9 @@ function template() {
         <div class="card">
           <div>
             <p class="title">Top Employeur</p>
-            <p class="price">Tech Solutions SARL</p>
+            <p class="price">
+              ${get_highest_contributing_employer()?.company_name}
+            </p>
             <p>Plus grand volume déclaré</p>
           </div>
           <svg
@@ -103,6 +111,7 @@ function template() {
         </div>
       </div>
       <canvas id="myChart"></canvas>
+      <!-- <canvas id="Pies"></canvas> -->
     </section>
   `;
 }
@@ -149,15 +158,25 @@ function styles() {
 }
 
 function script() {
+  const getCurrentMonth = new Date().getMonth() + 1;
+  const getCurrentYear = new Date().getFullYear();
+
+  console.log(getCurrentMonth);
+  console.log(getCurrentYear);
+
   const ctx = document.getElementById("myChart");
+  const pies = document.getElementById("Pies");
   new Chart(ctx, {
     type: "bar",
     data: {
-      labels: ["Red", "Blue", "Yellow", "Green"],
+      labels: [
+        `${getCurrentYear}-${getCurrentMonth}`,
+        `${getCurrentYear}-${getCurrentMonth - 1}`,
+      ],
       datasets: [
         {
           label: "My First Chart",
-          data: [12000, 1000, 10000, 7000],
+          data: [1200000, 1000, 10000, 7000],
           backgroundColor: "#6366f1",
           borderWidth: 2,
         },
@@ -168,36 +187,32 @@ function script() {
       scales: {
         y: {
           // defining min and max so hiding the dataset does not change scale range
-          min: 0,
-          max: 16000,
+          min: 10000,
+          // max: get_total_contributions(),
+          max: get_total_contributions(),
         },
       },
     },
   });
+  new Chart(pies, {
+    type: "doughnut",
+    data: {
+      labels: ["Red", "Blue", "Yellow"],
+      datasets: [
+        {
+          label: "My First Dataset",
+          data: [300, 50, 100],
+          backgroundColor: [
+            "rgb(255, 99, 132)",
+            "rgb(54, 162, 235)",
+            "rgb(255, 205, 86)",
+          ],
+          hoverOffset: 4,
+        },
+      ],
+    },
+  });
 }
-
-function calcul_avg_salaries(employees) {
-  return Math.round(
-    employees.reduce((sum, emp) => sum + emp.salary, 0) / employees.length,
-  );
-}
-
-function calcul_total_contribution(employers, employees) {
-  return (
-    employers.reduce((total, employer) => total + employer.contribution, 0) +
-    employees.reduce((total, employe) => total + employe.contribution, 0)
-  );
-}
-
-console.log(
-  calcul_total_contribution(example_data.employers, example_data.employees),
-);
-
-// function get_top_employer(declarations) {
-//   declarations.reduce((max, curr) => {
-//     return curr.month > max.month ? curr : max;
-//   });
-// }
 
 const Dashboard = { template, styles, script };
 

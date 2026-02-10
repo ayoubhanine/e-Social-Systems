@@ -15,8 +15,6 @@ export function get_employee_by_id(employee_id) {
   return null;
 }
 
-
-
 /**
  *
  * @returns {Employee[]} Array of all employees
@@ -93,20 +91,17 @@ export function get_employer_by_id(employer_id) {
   return EMPLOYERS.get(employer_id) || null;
 }
 
-
 /**
  * @returns {Employer[]}
  */
-export function get_all_employers(){
-  let employers = []
-  
-  for(let employer of EMPLOYERS.values()){
-    employers.push(employer)
+export function get_all_employers() {
+  let employers = [];
+
+  for (let employer of EMPLOYERS.values()) {
+    employers.push(employer);
   }
-  return employers
+  return employers;
 }
-
-
 
 /**
  * Adds an employer to the employers map.
@@ -224,4 +219,38 @@ export function get_average_employee_salary() {
     }
   }
   return employee_count > 0 ? total_salary / employee_count : 0;
+}
+
+export function get_all_declarations() {
+  let declarations = [];
+  for (let declaration of DECLARATIONS.values()) {
+    declarations.push(declaration);
+  }
+  return declarations;
+}
+
+/**
+ * Calculates the total of all contributions (employee + employer) across all declarations per month
+ * @param {Date} month
+ * @returns {Number} Total contributions from all declarations
+ */
+export function get_total_contributions_by_month(month) {
+  let total = 0;
+
+  for (let declaration of DECLARATIONS.values()) {
+    const declarationMonth = new Date(declaration.date).getMonth() + 1;
+
+    if (declarationMonth !== new Date(month).getMonth() + 1) continue;
+
+    const employer = EMPLOYERS.get(declaration.employer_id);
+    if (!employer) continue;
+
+    const employee = employer.get_employee(declaration.employee_id);
+    if (!employee) continue;
+
+    total += employee.contribution;
+    total += employee.salary * 0.08;
+  }
+
+  return total;
 }
