@@ -26,7 +26,7 @@ function template() {
         <div class="card">
           <div>
             <p class="title">Total Cotisations</p>
-            <p class="price">${formated_total_contribution}</p>
+            <p>${formated_total_contribution}</p>
             <p>Montant total collecté</p>
           </div>
           <svg
@@ -51,7 +51,7 @@ function template() {
         <div class="card">
           <div>
             <p class="title">Salaire Moyen</p>
-            <p class="price">${formated_avg}</p>
+            <p>${formated_avg}</p>
             <p>MSur l'ensemble des assurés</p>
           </div>
           <svg
@@ -74,9 +74,7 @@ function template() {
         <div class="card">
           <div>
             <p class="title">Top Employeur</p>
-            <p class="price">
-              ${get_highest_contributing_employer()?.company_name}
-            </p>
+            <p>${get_highest_contributing_employer()?.company_name}</p>
             <p>Plus grand volume déclaré</p>
           </div>
           <svg
@@ -141,6 +139,7 @@ function styles() {
       font-weight: bold;
       font-size: 1.5rem;
       margin: 0.2rem;
+      overflow-wrap: break-word;
     }
     #myChart {
       margin-top: 2rem;
