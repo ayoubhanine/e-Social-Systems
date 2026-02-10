@@ -1,4 +1,8 @@
 import {css, html} from "../utils/index"
+import { get_all_employers } from "../lib/functions";
+import { generateExampleData } from "../utils/example";
+
+generateExampleData(); 
 function template(){
     return html`
     <section class="assures-section">
@@ -29,7 +33,7 @@ function template(){
       </table>  </div>
         <form id="assureForm" class="assure-form hidden">
             <h3>Nouvel assure</h3>
-                <label>Matricule / CIN
+                <label> CIN
                 <input type="text" id="idAssure" required/> </label>
 
                 <label>Nom Complet
@@ -42,10 +46,11 @@ function template(){
 
                <label>
                      Employeur
-                    <select id="employeur" required>
-                        <option value="">-- Choisir --</option>
-                        <option>Tech Solutions SARL</option>
-                        <option>Atlas Construction</option>
+                    <select id="employeur" >
+                         <option value="">--Choisir--</option>
+  ${get_all_employers().map(e =>
+    `<option value="${e.id}">${e.company_name}</option>`
+  ).join("")}
                                                 </select>
                 </label>
 
@@ -60,6 +65,8 @@ function template(){
   <p><strong>ID Assuré :</strong> <span id="droitId"></span></p>
   <p><strong>Nom :</strong> <span id="droitNom"></span></p>
   <p><strong>Salaire :</strong> <span id="droitSalaire"></span></p>
+  <p><strong>Mois déclarés :</strong> <span id="moisDeclares"></span></p>
+  <p><strong>Total cotisé : </strong><span id="totalCotise"></span></p>
 
   <button id="btnCloseDroits">Fermer</button>
 </div>
@@ -107,6 +114,7 @@ function styles(){
     display: flex;
     flex-direction: column;
       gap: 20px;
+      padding:1.5rem
     }
     .assures-table {
     display:none;
@@ -123,7 +131,7 @@ function styles(){
 }
 
     .assures-section {
-      padding: 1.5rem;
+      padding: 0;
     }
 
     .assures-header {
@@ -141,8 +149,14 @@ function styles(){
       border-radius: 8px;
       cursor: pointer;
     }
+form {
+  width: 400px;      
+  margin: 0 auto;    /* centrer  horizontalement */
+}
 
     .assure-form {
+    display:flex;
+    flex-direction:column; 
       max-width: 400px;
       background: #fff;
       padding: 1.2rem;
@@ -194,12 +208,37 @@ function styles(){
     .hidden {
       display: none;
     }
+.btn-edit-salaire {
+  margin-left: 0.5rem;
+  background: #e5e7eb;
+  border: none;
+  padding: 0.3rem 0.6rem;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 0.75rem;
+}
 
     
     `
 }
 
 function script(){
+  const rows = document.querySelectorAll("tbody tr");
+  const moisDeclares = rows.length;
+
+document.getElementById("moisDeclares").textContent = moisDeclares;
+
+let totalCotise = 0;
+
+rows.forEach(row => {
+  const salaireText = row.querySelector(".salaire").textContent;
+  const salaire = parseFloat(salaireText);
+  totalCotise += salaire;
+});
+
+document.getElementById("totalCotise").textContent =
+  totalCotise.toFixed(2) + " DH";
+
    const btnAdd = document.getElementById("btnAdd")
   const form = document.getElementById("assureForm")
   const btnCancel = document.getElementById("btnCancel")
@@ -225,7 +264,7 @@ tableBody.addEventListener("click", (e) => {
 
     droitId.textContent = row.children[0].textContent
     droitNom.textContent = row.children[1].textContent
-    droitSalaire.textContent = row.children[2].textContent
+    droitSalaire.textContent = row.children[2].childNodes[1].textContent.trim()+ " DH";
 
     droitsCard.classList.remove("hidden")
   }
@@ -249,7 +288,8 @@ btnCloseDroits.addEventListener("click",()=>{
     tr.innerHTML = `
       <td>${idAssure.value}</td>
       <td>${nomComplet.value}</td>
-      <td>${salaire.value} DH</td>
+      <td>  <span class="salaire-value">${salaire.value}</span>
+  <button class="btn-edit-salaire">Modifier</button> </td>
       <td>${employeur.value}</td>
       <td><a href="#" class="link-droits" data-id="${idAssure.value}">Droits</a>
       </td>
@@ -273,6 +313,26 @@ btnCloseDroits.addEventListener("click",()=>{
     form.reset()
     form.classList.add("hidden")
   })
+  tableBody.addEventListener("click", (e) => {
+
+  if (e.target.classList.contains("btn-edit-salaire")) {
+    const row = e.target.closest("tr")
+    const salaireSpan = row.querySelector(".salaire-value")
+
+    const nouveauSalaire = prompt(
+      "Entrer le nouveau salaire :",
+      salaireSpan.textContent
+    )
+
+    if (nouveauSalaire !== null && nouveauSalaire !== "") {
+      salaireSpan.textContent = nouveauSalaire
+    }
+  }
+
+})
+
+
+
 }
 
 const assures = {template,
