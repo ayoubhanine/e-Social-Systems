@@ -37,6 +37,7 @@ export function get_employee_rights(employee_id) {
   /**
    * @type {Employee | null}
    */
+
   let employee = null;
   for (let employer of EMPLOYERS.values()) {
     employee = employer.get_employee(employee_id);
@@ -253,4 +254,19 @@ export function get_total_contributions_by_month(month) {
   }
 
   return total;
+}
+
+
+/**
+ * 
+ * @param {Date} date1 
+ * @param {Date} date2 
+ * @returns {boolean} Whether the two dates are in the same month and year
+ */
+export function compare_date_months(date1, date2) {
+  const month1 = new Date(date1).getMonth() + 1;
+  const month2 = new Date(date2).getMonth() + 1;
+  const year1 = new Date(date1).getFullYear();
+  const year2 = new Date(date2).getFullYear();
+  return month1 === month2 && year1 === year2;
 }
