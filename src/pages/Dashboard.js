@@ -111,6 +111,7 @@ function template() {
         </div>
       </div>
       <canvas id="myChart"></canvas>
+      <!-- <canvas id="Pies"></canvas> -->
     </section>
   `;
 }
@@ -164,6 +165,7 @@ function script() {
   console.log(getCurrentYear);
 
   const ctx = document.getElementById("myChart");
+  const pies = document.getElementById("Pies");
   new Chart(ctx, {
     type: "bar",
     data: {
@@ -174,7 +176,7 @@ function script() {
       datasets: [
         {
           label: "My First Chart",
-          data: [12000, 1000, 10000, 7000],
+          data: [1200000, 1000, 10000, 7000],
           backgroundColor: "#6366f1",
           borderWidth: 2,
         },
@@ -190,6 +192,24 @@ function script() {
           max: get_total_contributions(),
         },
       },
+    },
+  });
+  new Chart(pies, {
+    type: "doughnut",
+    data: {
+      labels: ["Red", "Blue", "Yellow"],
+      datasets: [
+        {
+          label: "My First Dataset",
+          data: [300, 50, 100],
+          backgroundColor: [
+            "rgb(255, 99, 132)",
+            "rgb(54, 162, 235)",
+            "rgb(255, 205, 86)",
+          ],
+          hoverOffset: 4,
+        },
+      ],
     },
   });
 }
