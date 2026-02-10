@@ -320,7 +320,6 @@ let month_input,
   reset_employer_filter_btn,
   no_declations_message;
 function script() {
-  console.log("first script run");
   page = select(".historique");
   no_declations_message = page.querySelector("#no_declarations");
   filters_container = page.querySelector(".filters-container");
@@ -470,12 +469,10 @@ function render_table(container, data) {
   container.innerHTML = "";
   if (data.length === 0) {
     no_declations_message.style.display = "block";
-    console.log(no_declations_message.style.display, data.size);
 
     return;
   }
   no_declations_message.style.display = "none";
-  console.log(no_declations_message.style.display, data.size);
 
   let htmlContent = Array.from(data.values())
     .map((declaration) => create_row(declaration))
