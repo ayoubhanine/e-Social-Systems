@@ -15,6 +15,8 @@ export function get_employee_by_id(employee_id) {
   return null;
 }
 
+
+
 /**
  *
  * @returns {Employee[]} Array of all employees
