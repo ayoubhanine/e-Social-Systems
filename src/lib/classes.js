@@ -116,7 +116,6 @@ export class Declaration {
     const employee = employer.get_employee(this.employee_id);
     if (!employee) return 0;
     
-    // Declarations should be submitted within 30 days of the declaration date
     const days_since = get_days_between_dates(this.date, new Date());
     const days_late = Math.max(0, days_since - 30);
     
@@ -131,6 +130,7 @@ export class Declaration {
     if (!employer) return 0;
     const employee = employer.get_employee(this.employee_id);
     if (!employee) return 0;
+
     return Math.ceil(employee.contribution + employer.contribution / employer.employee_count); 
   }
 }
