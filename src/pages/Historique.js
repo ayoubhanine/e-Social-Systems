@@ -370,6 +370,7 @@ function apply_filters_handler() {
   }
   render_table(table_container, filtered_declarations);
   toggle_filters_handler();
+  window.scroll({top:0 , behavior:"smooth"})
 }
 
 function toggle_filters_handler() {
@@ -452,6 +453,7 @@ function reset_filters_handler() {
   employer_select.setAttribute("applied", "false");
   toggle_filters_handler();
   render_table(table_container, [...DECLARATIONS.values()]);
+  window.scroll({top:0 , behavior:"smooth"})
 }
 const Historique = {
   template,
