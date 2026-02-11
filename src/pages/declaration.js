@@ -1,6 +1,7 @@
 import {css, html} from "../utils/index";
-import { generateExampleData } from "../utils/example";
-import { DECLARATIONS ,  EMPLOYERS } from "../data";
+import { generateExampleData } from "../utils/example.js"
+import { DECLARATIONS ,  EMPLOYERS } from "../data/index.js";
+
 import { navigate } from "../router";
 generateExampleData();
 function template(){
@@ -122,14 +123,11 @@ input {
 }
 
 function script() {
-  const select = document.querySelector(".declaration-card select");
 
   const btn = document.getElementById("declare-btn");
 
-
-
-
-
+  const select = document.querySelector(".declaration-card select");
+  
   EMPLOYERS.forEach((emp) => {
     const option = document.createElement("option");
     option.value = emp.id;
