@@ -79,29 +79,21 @@ function template() {
         </div>
       </header>
       <main>
-        <div class="filters">
-          <p>Filtrez par:</p>
-          <div class="filter">
-            <div id="filter__employer">
-              <select applied="false">
-                <option value="">Employeur</option>
-                ${get_all_employers()
-                  .map(
-                    (employer) =>
-                      html`<option value="${employer.id}">
-                        ${employer.company_name}
-                      </option>`,
-                  )
-                  .join("\n")}
-              </select>
-            </div>
-            <div class="filter__months">
-              <input type="month" applied="false" value="${now}" />
-            </div>
+        <div class="historique__grid">
+          <div class="grid-header">
+            <div class="grid-cell header-cell">Mois</div>
+            <div class="grid-cell header-cell">Employeur</div>
+            <div class="grid-cell header-cell">Total Cotisé</div>
+            <div class="grid-cell header-cell">Pénalités</div>
+            <div class="grid-cell header-cell">Salarie</div>
           </div>
-          <button id="reset_filters">Réinitialiser</button>
+          <div id="historique__tbody"></div>
         </div>
-        <hr />
+        <div id="no_declarations">
+          <h1 class="no-declarations">
+            Aucune déclaration trouvée, essayez de modifier les filtres
+          </h1>
+        </div>
       </main>
     </section>
   `;
