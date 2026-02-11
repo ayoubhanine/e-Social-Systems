@@ -258,8 +258,7 @@ export function get_total_contributions_by_month(month) {
 
 
 /**
- * 
- * @param {Date} date1 
+ * @param {Date} date1
  * @param {Date} date2 
  * @returns {boolean} Whether the two dates are in the same month and year
  */

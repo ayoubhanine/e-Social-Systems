@@ -9,8 +9,8 @@ import { Declaration } from "../lib/classes";
 import { DECLARATIONS } from "../data";
 
 const now = `${get_now().getFullYear()}-${String(get_now().getMonth() + 1).padStart(2, "0")}`;
-DECLARATIONS.clear();
-generateExampleData(2, 2, 2);
+// DECLARATIONS.clear();
+generateExampleData(5 , 5 , 2 );
 function template() {
   return html`
     <section class="historique">
@@ -48,7 +48,7 @@ function template() {
                 </button>
               </div>
               <select applied="false">
-                <option value="">Employeur</option>
+                <option value="">Tout</option>
                 ${get_all_employers()
                   .map(
                     (employer) =>
@@ -465,6 +465,7 @@ const Historique = {
  * @param {HTMLElement} container
  * @param {Declaration[]} data
  */
+
 function render_table(container, data) {
   container.innerHTML = "";
   if (data.length === 0) {

@@ -2,7 +2,7 @@ import {css, html} from "../utils/index"
 import { get_all_employers } from "../lib/functions";
 import { generateExampleData } from "../utils/example";
 
-generateExampleData(); 
+// generateExampleData(); 
 function template(){
     return html`
     <section class="assures-section">
