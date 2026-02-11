@@ -50,7 +50,7 @@ export function get_employee_rights(employee_id) {
   for (let declaration of DECLARATIONS.values()) {
     if (declaration.employee_id === employee_id) {
       total += employee.contribution;
-      total += employee.salary * 0.08;
+      total += Math.min(employee.salary , 6000) * 0.08;
     }
   }
   return total;

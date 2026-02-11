@@ -1,8 +1,8 @@
 import { css, html } from "../utils/index";
-import { get_all_employees, get_all_employers, get_employer_by_id } from "../lib/functions";
+import { add_employee, get_all_employees, get_all_employers, get_employee_by_id, get_employee_rights, get_employer_by_id } from "../lib/functions";
 import { Employee } from "../lib/classes.js";
 import { generateExampleData } from "../utils/example.js";
-import { EMPLOYERS } from "../data";
+import { DECLARATIONS, EMPLOYERS } from "../data";
 
 generateExampleData()
 function template() {
@@ -158,16 +158,25 @@ function styles() {
   display: flex;
   align-items: center;      
   justify-content: center;  
-  padding: 4px;
-  background: transparent;
+  background-color:transparent;
+  height:1rem;
+  width:1rem;
   border: none;
   cursor: pointer;
 }
+.btn-edit-salaire:hover{
+  svg{
+    transition:scale 300ms ease-in;
+    scale:1.05;
+  }
+}
+td.salary{
+  display:flex;
+  align-items:center;
+  gap:4px;
+}
 
   
-  .btn-edit-salaire:hover {
-  background: #c7d2fe;
-}
   @media (max-width: 768px) {
   .assures-table {
     font-size: 0.85rem;
@@ -294,21 +303,20 @@ function script() {
   const totalCotiseSpan = document.getElementById("totalCotise");
   const btnCloseDroits = document.getElementById("btnCloseDroits");
 
-  let employees = get_all_employees();
   renderTable()
 
   function renderTable() {
+    const employees  = get_all_employees()
     tableBody.innerHTML = "";
-    employees.forEach((emp, index) => {
+    employees.forEach((emp) => {
       const tr = document.createElement("tr");
-      tr.dataset.index = index;
+      tr.setAttribute("employee-id" ,  emp.id)
       tr.innerHTML = html`
         <td>${emp.id}</td>
         <td>${emp.name}</td>
-        <td>
-          ${emp.salary}
-          <button class="btn-edit-salaire">
-          <svg width="15" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <td class="salary">
+          <button class="btn-edit-salaire" >
+          <svg  width="15" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
 <path d="M12 3H5C4.46957 3 3.96086 3.21071 3.58579 3.58579C3.21071 3.96086 3 4.46957 3 5V19C3 19.5304 3.21071 20.0391 3.58579 20.4142C3.96086 20.7893 4.46957 21 5 21H19C19.5304 21 20.0391 20.7893 20.4142 20.4142C20.7893 20.0391 21 19.5304 21 19V12" 
 stroke="red"
 stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -316,6 +324,7 @@ stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
  stroke="red" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
 </svg>
           </button>
+          <span>${emp.salary}</span>
         </td>
         <td>${[...EMPLOYERS.values()].find(e => e.get_employee(emp.id))?.company_name}</td>
         <td><a href="#" class="link-droits">Droits</a></td>
@@ -343,9 +352,7 @@ stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
 
     const emp = new Employee(nomComplet.value, Number(salaire.value));
     let employerId = employeurSelect.value;
-    emp.months_declared = 8; // exemple
-    employees.push(emp);
-    get_employer_by_id(employerId).add_employee(emp)
+    add_employee( employerId ,emp);
     renderTable();
     form.classList.add("hidden");
   };
@@ -354,27 +361,28 @@ stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
     const row = e.target.closest("tr");
     if (!row) return;
 
-    const emp = employees[row.dataset.index];
-
-    if (e.target.classList.contains("btn-edit-salaire")) {
-      const newSalary = prompt("Nouveau salaire :", emp.salary);
+    const id = row.getAttribute("employee-id");
+    const employee = get_employee_by_id(id)
+    
+    
+    if (e.target.parentNode.classList.contains("btn-edit-salaire")) {
+      const newSalary = prompt("Nouveau salaire :" , employee.salary);
       if (newSalary) {
-        emp.salary = Number(newSalary);
+        employee.set_salary(Number(newSalary))
         renderTable();
       }
     }
 
     if (e.target.classList.contains("link-droits")) {
       e.preventDefault();
-      const mois = emp.months_declared || 0;
-      const total = emp.contribution * mois;
-
-      droitId.textContent = emp.id;
-      droitNom.textContent = emp.name;
-      droitSalaire.textContent = emp.salary + " DH";
+      const mois = get_employee_declared_months(id);
+      console.log(employee)
+      const total = get_employee_rights(id);
+      droitId.textContent = employee.id;
+      droitNom.textContent = employee.name;
+      droitSalaire.textContent = employee.salary + " DH";
       moisDeclaresSpan.textContent = mois;
       totalCotiseSpan.textContent = total + " DH";
-
       droitsCard.classList.remove("hidden");
     }
   };
@@ -384,6 +392,14 @@ stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
   };
 }
 
+
+function get_employee_declared_months(id){
+  let declared = 0 
+  for(let emp of DECLARATIONS.values()){
+    if(emp.employee_id === id) declared++
+  }
+  return declared
+}
 
 const assures = { template, styles, script };
 export default assures;
