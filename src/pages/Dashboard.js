@@ -4,7 +4,10 @@ import {
   get_highest_contributing_employer,
   get_total_contributions,
 } from "../lib/functions";
+
 import { css, html } from "../utils/index";
+
+let myChart = null;
 
 /**
  * Génère le template HTML du tableau de bord
@@ -185,6 +188,7 @@ function styles() {
  * Crée un graphique en barres des contributions des top employeurs sur 4 mois
  */
 function script() {
+  // toast.success("dkfjk");
   /**
    * Récupère les contributions des top employeurs pour les 4 derniers mois
    * @returns {Array} Tableau d'objets {month, company, contribution}
@@ -241,10 +245,14 @@ function script() {
   const contributions = chartData.map((item) => item.contribution);
 
   // Récupération du contexte du canvas
+
   const ctx = document.getElementById("myChart").getContext("2d");
 
+  if (myChart) {
+    myChart.destroy();
+  }
   // Création du graphique en barres avec Chart.js
-  new Chart(ctx, {
+  myChart = new Chart(ctx, {
     type: "bar", // Type de graphique
     data: {
       labels: labels, // Labels de l'axe X (mois)

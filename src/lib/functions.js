@@ -50,10 +50,10 @@ export function get_employee_rights(employee_id) {
   for (let declaration of DECLARATIONS.values()) {
     if (declaration.employee_id === employee_id) {
       total += employee.contribution;
-      total += employee.salary * 0.08;
+      total += Math.min(employee.salary , 6000) * 0.08;
     }
   }
-  return total;
+  return Math.ceil(total);
 }
 /**
  * Adds an employee to an employer.
@@ -157,7 +157,7 @@ export function get_employer_contribution(employer_id) {
       }
     }
   }
-  return contribution;
+  return Math.ceil(contribution);
 }
 
 /**
@@ -188,7 +188,7 @@ export function get_total_contributions() {
       total += employee.salary * 0.08;
     }
   }
-  return total;
+  return Math.ceil(total);
 }
 
 /**
@@ -255,7 +255,7 @@ export function get_total_contributions_by_month(month) {
     total += employee.salary * 0.08;
   }
 
-  return total;
+  return Math.ceil(total);
 }
 
 
