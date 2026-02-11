@@ -66,3 +66,4 @@ function toggle_active_link(path) {
 }
 
 render(window.location.pathname);
+toggle_active_link(window.location.pathname)

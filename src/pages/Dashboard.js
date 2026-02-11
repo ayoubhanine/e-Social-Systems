@@ -1,6 +1,22 @@
-import example_data from "../utils/data";
+import { DECLARATIONS, EMPLOYERS } from "../data";
+import {
+  get_average_employee_salary,
+  get_highest_contributing_employer,
+  get_total_contributions,
+} from "../lib/functions";
 import { css, html } from "../utils/index";
+
 function template() {
+  const formated_total_contribution = new Intl.NumberFormat("fr-MA", {
+    style: "currency",
+    currency: "MAD",
+  }).format(get_total_contributions());
+
+  const formated_avg = new Intl.NumberFormat("fr-MA", {
+    style: "currency",
+    currency: "MAD",
+  }).format(get_average_employee_salary());
+
   return html`
     <header>
       <h1 class="heading">Tableau de bord</h1>
@@ -10,16 +26,7 @@ function template() {
         <div class="card">
           <div>
             <p class="title">Total Cotisations</p>
-            <p class="price">
-              ${calcul_total_contribution(
-                example_data.employees,
-                example_data.employers,
-              ).toLocaleString("en-US", {
-                minimumFractionDigits: 2,
-                maximumFractionDigits: 2,
-              })}
-              MAD
-            </p>
+            <p>${formated_total_contribution}</p>
             <p>Montant total collecté</p>
           </div>
           <svg
@@ -44,16 +51,7 @@ function template() {
         <div class="card">
           <div>
             <p class="title">Salaire Moyen</p>
-            <p class="price">
-              ${calcul_avg_salaries(example_data.employees).toLocaleString(
-                "en-US",
-                {
-                  minimumFractionDigits: 2,
-                  maximumFractionDigits: 2,
-                },
-              )}
-              MAD
-            </p>
+            <p>${formated_avg}</p>
             <p>MSur l'ensemble des assurés</p>
           </div>
           <svg
@@ -76,7 +74,7 @@ function template() {
         <div class="card">
           <div>
             <p class="title">Top Employeur</p>
-            <p class="price">Tech Solutions SARL</p>
+            <p>${get_highest_contributing_employer()?.company_name}</p>
             <p>Plus grand volume déclaré</p>
           </div>
           <svg
@@ -141,6 +139,7 @@ function styles() {
       font-weight: bold;
       font-size: 1.5rem;
       margin: 0.2rem;
+      overflow-wrap: break-word;
     }
     #myChart {
       margin-top: 2rem;
@@ -149,15 +148,52 @@ function styles() {
 }
 
 function script() {
-  const ctx = document.getElementById("myChart");
+  function getTopCompanyLast4Months() {
+    const today = new Date();
+    const fourMonthsAgo = new Date();
+    fourMonthsAgo.setMonth(today.getMonth() - 4);
+
+    const grouped = {};
+
+    for (const decl of DECLARATIONS.values()) {
+      const date = new Date(decl.date);
+
+      if (date < fourMonthsAgo || date > today) continue;
+
+      const month = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}`;
+      const company = EMPLOYERS.get(decl.employer_id).company_name;
+
+      grouped[month] = grouped[month] || {};
+      grouped[month][company] =
+        (grouped[month][company] || 0) + decl.total_contribution;
+    }
+
+    return Object.entries(grouped)
+      .map(([month, companies]) => {
+        const [topCompany, maxContribution] = Object.entries(companies).reduce(
+          (max, curr) => (curr[1] > max[1] ? curr : max),
+        );
+
+        return { month, company: topCompany, contribution: maxContribution };
+      })
+      .sort((a, b) => a.month.localeCompare(b.month));
+  }
+
+  const chartData = getTopCompanyLast4Months();
+
+  const labels = chartData.map((item) => item.month);
+  const contributions = chartData.map((item) => item.contribution);
+
+  const ctx = document.getElementById("myChart").getContext("2d");
+
   new Chart(ctx, {
     type: "bar",
     data: {
-      labels: ["Red", "Blue", "Yellow", "Green"],
+      labels: labels,
       datasets: [
         {
-          label: "My First Chart",
-          data: [12000, 1000, 10000, 7000],
+          label: "Top Company Contribution",
+          data: contributions,
           backgroundColor: "#6366f1",
           borderWidth: 2,
         },
@@ -167,37 +203,23 @@ function script() {
       events: ["click"],
       scales: {
         y: {
-          // defining min and max so hiding the dataset does not change scale range
-          min: 0,
-          max: 16000,
+          beginAtZero: true,
+          max: Math.max(...contributions) * 1.2,
+        },
+      },
+      plugins: {
+        tooltip: {
+          callbacks: {
+            afterLabel: function (context) {
+              const index = context.dataIndex;
+              return `Company: ${chartData[index].company}`;
+            },
+          },
         },
       },
     },
   });
 }
-
-function calcul_avg_salaries(employees) {
-  return Math.round(
-    employees.reduce((sum, emp) => sum + emp.salary, 0) / employees.length,
-  );
-}
-
-function calcul_total_contribution(employers, employees) {
-  return (
-    employers.reduce((total, employer) => total + employer.contribution, 0) +
-    employees.reduce((total, employe) => total + employe.contribution, 0)
-  );
-}
-
-console.log(
-  calcul_total_contribution(example_data.employers, example_data.employees),
-);
-
-// function get_top_employer(declarations) {
-//   declarations.reduce((max, curr) => {
-//     return curr.month > max.month ? curr : max;
-//   });
-// }
 
 const Dashboard = { template, styles, script };
 

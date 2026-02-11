@@ -124,13 +124,13 @@ export class Declaration {
     
     // Penalty: 0.005% per day of (employee contribution + employer contribution per employee)
     const base_contribution = employee.contribution + (employer.contribution / employer.employee_count);
-    return days_late * base_contribution * 0.00005; // 0.005% = 0.00005
+    return Math.ceil(days_late * base_contribution * 0.00005); // 0.005% = 0.00005
   }
   get total_contribution() {
     const employer = get_employer_by_id(this.employer_id);
     if (!employer) return 0;
     const employee = employer.get_employee(this.employee_id);
     if (!employee) return 0;
-    return employee.contribution + employer.contribution / employer.employee_count;
+    return Math.ceil(employee.contribution + employer.contribution / employer.employee_count); 
   }
 }

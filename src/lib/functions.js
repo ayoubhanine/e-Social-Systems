@@ -39,6 +39,7 @@ export function get_employee_rights(employee_id) {
   /**
    * @type {Employee | null}
    */
+
   let employee = null;
   for (let employer of EMPLOYERS.values()) {
     employee = employer.get_employee(employee_id);
@@ -93,20 +94,17 @@ export function get_employer_by_id(employer_id) {
   return EMPLOYERS.get(employer_id) || null;
 }
 
-
 /**
  * @returns {Employer[]}
  */
-export function get_all_employers(){
-  let employers = []
-  
-  for(let employer of EMPLOYERS.values()){
-    employers.push(employer)
+export function get_all_employers() {
+  let employers = [];
+
+  for (let employer of EMPLOYERS.values()) {
+    employers.push(employer);
   }
-  return employers
+  return employers;
 }
-
-
 
 /**
  * Adds an employer to the employers map.
@@ -224,4 +222,53 @@ export function get_average_employee_salary() {
     }
   }
   return employee_count > 0 ? total_salary / employee_count : 0;
+}
+
+export function get_all_declarations() {
+  let declarations = [];
+  for (let declaration of DECLARATIONS.values()) {
+    declarations.push(declaration);
+  }
+  return declarations;
+}
+
+/**
+ * Calculates the total of all contributions (employee + employer) across all declarations per month
+ * @param {Date} month
+ * @returns {Number} Total contributions from all declarations
+ */
+export function get_total_contributions_by_month(month) {
+  let total = 0;
+
+  for (let declaration of DECLARATIONS.values()) {
+    const declarationMonth = new Date(declaration.date).getMonth() + 1;
+
+    if (declarationMonth !== new Date(month).getMonth() + 1) continue;
+
+    const employer = EMPLOYERS.get(declaration.employer_id);
+    if (!employer) continue;
+
+    const employee = employer.get_employee(declaration.employee_id);
+    if (!employee) continue;
+
+    total += employee.contribution;
+    total += employee.salary * 0.08;
+  }
+
+  return total;
+}
+
+
+/**
+ * 
+ * @param {Date} date1 
+ * @param {Date} date2 
+ * @returns {boolean} Whether the two dates are in the same month and year
+ */
+export function compare_date_months(date1, date2) {
+  const month1 = new Date(date1).getMonth() + 1;
+  const month2 = new Date(date2).getMonth() + 1;
+  const year1 = new Date(date1).getFullYear();
+  const year2 = new Date(date2).getFullYear();
+  return month1 === month2 && year1 === year2;
 }
