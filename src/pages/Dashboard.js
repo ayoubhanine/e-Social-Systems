@@ -6,7 +6,8 @@ import {
 } from "../lib/functions";
 
 import { css, html } from "../utils/index";
-import toast from "../utils/toast";
+
+let myChart = null;
 
 /**
  * Génère le template HTML du tableau de bord
@@ -188,7 +189,6 @@ function styles() {
  */
 function script() {
   // toast.success("dkfjk");
-  toast.withLink("djkf", "voir historique", "http://localhost:5173/historique");
   /**
    * Récupère les contributions des top employeurs pour les 4 derniers mois
    * @returns {Array} Tableau d'objets {month, company, contribution}
@@ -245,10 +245,14 @@ function script() {
   const contributions = chartData.map((item) => item.contribution);
 
   // Récupération du contexte du canvas
+
   const ctx = document.getElementById("myChart").getContext("2d");
 
+  if (myChart) {
+    myChart.destroy();
+  }
   // Création du graphique en barres avec Chart.js
-  new Chart(ctx, {
+  myChart = new Chart(ctx, {
     type: "bar", // Type de graphique
     data: {
       labels: labels, // Labels de l'axe X (mois)
