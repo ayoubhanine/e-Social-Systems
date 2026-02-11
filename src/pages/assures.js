@@ -164,9 +164,7 @@ function styles() {
   cursor: pointer;
 }
 
-  svg{
- 
-  }
+  
   .btn-edit-salaire:hover {
   background: #c7d2fe;
 }
@@ -375,7 +373,7 @@ stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
       droitNom.textContent = emp.name;
       droitSalaire.textContent = emp.salary + " DH";
       moisDeclaresSpan.textContent = mois;
-      totalCotiseSpan.textContent = total.toFixed(2) + " DH";
+      totalCotiseSpan.textContent = total + " DH";
 
       droitsCard.classList.remove("hidden");
     }
