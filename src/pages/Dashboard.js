@@ -4,7 +4,9 @@ import {
   get_highest_contributing_employer,
   get_total_contributions,
 } from "../lib/functions";
+
 import { css, html } from "../utils/index";
+import toast from "../utils/toast";
 
 /**
  * Génère le template HTML du tableau de bord
@@ -185,6 +187,8 @@ function styles() {
  * Crée un graphique en barres des contributions des top employeurs sur 4 mois
  */
 function script() {
+  // toast.success("dkfjk");
+  toast.withLink("djkf", "voir historique", "http://localhost:5173/historique");
   /**
    * Récupère les contributions des top employeurs pour les 4 derniers mois
    * @returns {Array} Tableau d'objets {month, company, contribution}
