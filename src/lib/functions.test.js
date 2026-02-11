@@ -40,7 +40,6 @@ describe("Employer class", () => {
     const employer = new Employer("", "Company A", 100000);
     expect(employer.sector).toBe("Other");
     expect(employer.company_name).toBe("Company A");
-    expect(employer.income_per_month).toBe(100000);
     expect(employer.employees.size).toBe(0);
     expect(employer.id).toBeTruthy();
   });

@@ -25,7 +25,7 @@ export class Employer {
     if (!sectors[sector]) {
       this.sector = "Other";
     }
-    this.company_name = company_name;
+    this.company_name = company_name.trim();
     /** @type {Set<Employee>} */
     this.employees = new Set();
     this.penalties = 0;
