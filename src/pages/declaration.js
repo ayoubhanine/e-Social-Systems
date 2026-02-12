@@ -1,9 +1,7 @@
 import {css, html} from "../utils/index";
-import { generateExampleData } from "../utils/example.js"
 import { DECLARATIONS ,  EMPLOYERS } from "../data/index.js";
 import { navigate } from "../router";
 import toast from "../utils/toast.js";
-generateExampleData();
 function template(){
     return html`
         <section class="declarations-page">

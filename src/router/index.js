@@ -4,6 +4,7 @@ import Declaration from "../pages/declaration";
 import Employeurs from "../pages/Employeurs";
 import Assures from "../pages/assures";
 import Historique from "../pages/Historique";
+import { generateExampleData } from "../utils/example";
 const routes = {
   "/": Dashboard,
   "/declaration": Declaration,
@@ -11,10 +12,11 @@ const routes = {
   "/assures": Assures,
   "/historique":Historique
 };
+generateExampleData(4 , 3 , 3)
 
 // create root element and style element for page styles
 const root = select("#app");
-const page_style = document.createElement("style");
+const page_style = document.createElement("style" );
 document.head.appendChild(page_style);
 export async function navigate(path) {
   root.classList.add("exit");
