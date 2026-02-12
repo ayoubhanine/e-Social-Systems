@@ -1,4 +1,5 @@
 import { css } from ".";
+import { navigate } from "../router";
 
 const styles = document.createElement("style");
 styles.textContent = css`
@@ -232,7 +233,7 @@ const toast = {
       <div class="toast-custom-content">
         <div class="toast-custom-message"> ✓ ${message}</div>
         <div class="toast-custom-actions">
-          <a href="${linkUrl}" class="toast-link" id="toast-link-btn">${linkText}</a>
+          <a href="${linkUrl}" data-link class="toast-link" id="toast-link-btn">${linkText}</a>
         </div>
       </div>
     `;
@@ -254,7 +255,7 @@ const toast = {
         linkBtn.addEventListener("click", (e) => {
           e.preventDefault();
           toastInstance.hideToast();
-          window.location.href = linkUrl;
+          navigate(linkUrl);
         });
       }
     }, 100);

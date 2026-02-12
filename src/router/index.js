@@ -38,6 +38,7 @@ function render(path) {
   }
   root.innerHTML = page.template();
   page_style.textContent = page.styles();
+  toggle_active_link(path )
   
   // cleanup previous page script if exists
   if (page.cleanup) page.cleanup();
