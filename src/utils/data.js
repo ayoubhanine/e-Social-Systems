@@ -99,7 +99,7 @@ export function generateRandomDataset({
     employers.push(employer);
   }
 
-  return { employers, employees, declarations };
+  return { employers, employees, declarations, sectors };
 }
 const example_data = generateRandomDataset({
   numEmployers: 10,
