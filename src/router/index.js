@@ -9,7 +9,7 @@ const routes = {
   "/declaration": Declaration,
   "/employeurs": Employeurs,
   "/assures": Assures,
-  "/historique":Historique
+  "/historique": Historique,
 };
 
 // create root element and style element for page styles
@@ -23,7 +23,7 @@ export async function navigate(path) {
   render(path);
   root.classList.remove("exit");
   root.classList.add("enter");
-  await sleep(300); 
+  await sleep(300);
   root.classList.remove("enter");
 }
 
@@ -36,7 +36,6 @@ function render(path) {
   }
   root.innerHTML = page.template();
   page_style.textContent = page.styles();
-  page.script()  ;
 
   // cleanup previous page script if exists
   if (page.cleanup) page.cleanup();
@@ -67,4 +66,4 @@ function toggle_active_link(path) {
 }
 
 render(window.location.pathname);
-toggle_active_link(window.location.pathname)
+toggle_active_link(window.location.pathname);

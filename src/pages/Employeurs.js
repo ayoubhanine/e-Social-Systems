@@ -1,7 +1,17 @@
+// Array dyal les employeurs (data)
 import { EMPLOYERS } from "../data";
+
+// class bach ncreiw object jdid
 import { Employer } from "../lib/classes";
+
+// function bach nzidou f Employers
 import { add_employer } from "../lib/functions";
+import example_data from "../utils/data";
+
+// utils dyal template o styles
 import { css, html } from "../utils/index";
+import toast from "../utils/toast";
+import { cleanup } from "./base";
 
 function template() {
   return html`
@@ -27,6 +37,8 @@ function template() {
                 <th>Employés</th>
               </tr>
             </thead>
+
+            <!-- Tbody khawya, data ghadi tzid fuha mn script dynamiquement -->
             <tbody id="employeursTableBody"></tbody>
           </table>
         </div>
@@ -50,13 +62,7 @@ function template() {
 
             <div class="form-group">
               <label class="form-label">Secteur</label>
-              <select class="form-select" id="selectSecteur" required>
-                <option value="Technologie">Technologie</option>
-                <option value="Industrie">Industrie</option>
-                <option value="Commerce">Commerce</option>
-                <option value="Services">Services</option>
-                <option value="Agriculture">Agriculture</option>
-              </select>
+              <select class="form-select" id="selectSecteur" required></select>
             </div>
 
             <div class="modal-actions">
@@ -306,33 +312,52 @@ function styles() {
 }
 
 function script() {
+  console.log(example_data);
+  // button "ajouter"
   const btnAdd = document.getElementById("btnAddEmployeur");
+
+  // button "annuler"
   const btnCancel = document.getElementById("btnCancel");
+
+  // background gris
   const modalOverlay = document.getElementById("modalOverlay");
+
+  // form dyal modal
   const form = document.getElementById("formAddEmployeur");
 
   function displayEmployers() {
     const tbody = document.getElementById("employeursTableBody");
 
+    tbody.innerHTML = "";
+    // kat loop kol employeur f Employers array
+    // destructing: kat khri id, company_name, emloyee_count, sector mn kol objet
+
     EMPLOYERS.forEach(({ id, company_name, employee_count, sector }) => {
+      // kat creia row jdida
       const row = document.createElement("tr");
+
+      // kat 7et data fiha
       row.innerHTML = `
       <td class="id-cell">${id}</td>
       <td class="company-name">${company_name}</td>
       <td><span class="badge">${sector}</span></td>
       <td class="employee-count">${employee_count}</td>
       `;
+
+      // kat zidha f table
       tbody.appendChild(row);
     });
   }
-
+  // t-afficher les données
   displayEmployers();
 
+  // CLOSE: Click 3la "Annuler" → modal tat-khba o form tat-reset
   // Open modal
   btnAdd?.addEventListener("click", () => {
     modalOverlay.classList.add("active");
   });
 
+  // click barra mn modal (3la overlay) => nfs chi
   // Close modal b button Annuler
   btnCancel?.addEventListener("click", () => {
     modalOverlay.classList.remove("active");
@@ -340,6 +365,7 @@ function script() {
   });
 
   // Close modal ila clickiti barra
+  // e.target => l3onser li clikiti 3lih bdabt
   modalOverlay?.addEventListener("click", (e) => {
     if (e.target === modalOverlay) {
       modalOverlay.classList.remove("active");
@@ -348,24 +374,30 @@ function script() {
   });
 
   // Submit form
-  form?.addEventListener("submit", (e) => {
+  //
+  function handleSubmit(e) {
     e.preventDefault();
 
-    // Hna ghadi njibo l-values mn inputs
-
+    //Kat-khrj les valeurs dyal inputs F L-WA9T dyal submit
     const raisonSociale = document.getElementById("inputRaisonSociale").value;
     const secteur = document.getElementById("selectSecteur").value;
 
+    // Kat-créia objet jdid mn class Employer
     // Ajouter f table
     const employer = new Employer(secteur, raisonSociale);
+
+    // Kat-zid l-objet f EMPLOYERS array (f data)
 
     add_employer(employer);
 
     displayEmployers();
 
+    toast.success("employeur est ajouté avec success !");
+
     modalOverlay.classList.remove("active");
     form.reset();
-  });
+  }
+  form?.addEventListener("submit", handleSubmit);
 
   // Table row click
   document.querySelectorAll("#employeursTableBody tr").forEach((row) => {
@@ -374,6 +406,15 @@ function script() {
       console.log("Ligne cliquée:", id);
     });
   });
+
+  example_data.sectors.forEach((sector) => {
+    const option = document.createElement("option");
+    option.value = sector;
+    option.textContent = sector;
+
+    document.querySelector("#selectSecteur").append(option);
+  });
+  // cleanup(form, "submit", handleSubmit);
 }
 
 const Employeurs = {
