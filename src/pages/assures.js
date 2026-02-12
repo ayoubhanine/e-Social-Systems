@@ -352,7 +352,7 @@ stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
 
     const emp = new Employee(nomComplet.value, Number(salaire.value));
     let employerId = employeurSelect.value;
-    add_employee( employerId ,emp);
+    add_employee( employerId ,emp);  // liason entre employee et employer
     renderTable();
     form.classList.add("hidden");
   };
