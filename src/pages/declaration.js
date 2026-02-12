@@ -1,8 +1,8 @@
 import {css, html} from "../utils/index";
 import { generateExampleData } from "../utils/example.js"
 import { DECLARATIONS ,  EMPLOYERS } from "../data/index.js";
-
 import { navigate } from "../router";
+import toast from "../utils/toast.js";
 generateExampleData();
 function template(){
     return html`
@@ -18,14 +18,15 @@ function template(){
                 <div class="card-body">
                   <div class="field">
                     <label>Employeur</label>
-                    <select>
-                      <option>--Selectionner--</option>
+                    <select id="employer-select">
+                      <option value="">-- Sélectionner --</option>
                     </select>
+
                   </div>
 
                   <div class="field">
                       <label>Mois</label>
-                      <input type="date" value="2026-02" />
+                      <input type="date" value="2026-02-01" />
                   </div>
 
                   <button id="declare-btn" class="declare-btn">
@@ -93,7 +94,9 @@ label {
   font-weight: 500;
   color: var(--muted-foreground);
 }
-
+select{
+  color:  #070707;
+}
 select,
 input {
   padding: 8.8px 12px;
@@ -125,21 +128,28 @@ input {
 function script() {
 
   const btn = document.getElementById("declare-btn");
+  const select = document.getElementById("employer-select");
 
-  const select = document.querySelector(".declaration-card select");
-  
+  if (!select) return;
+
   EMPLOYERS.forEach((emp) => {
     const option = document.createElement("option");
     option.value = emp.id;
-    option.textContent = emp.raisonSociale;
+    option.textContent = emp.company_name;
     select.appendChild(option);
   });
+
   if (!btn) return;
 
   btn.addEventListener("click", () => {
-    navigate("/historique")
+    toast.withLink(
+      "Déclaration réussie",
+      "Voir l'historique",
+      "http://localhost:5173/historique"
+    );
   });
 }
+
 
 const declaration = {
     template,
