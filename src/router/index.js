@@ -36,7 +36,7 @@ function render(path) {
   }
   root.innerHTML = page.template();
   page_style.textContent = page.styles();
-
+  
   // cleanup previous page script if exists
   if (page.cleanup) page.cleanup();
   if (page.script) page.script();

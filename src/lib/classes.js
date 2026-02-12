@@ -53,6 +53,7 @@ export class Employer {
    * @param {Employee} employee
    */
   add_employee(employee) {
+    if(this.employees.has(employee)) return;
     this.employees.add(employee);
   }
   /**
