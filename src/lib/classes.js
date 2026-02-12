@@ -14,6 +14,9 @@ const sectors = {
   "Agriculture": 10,
   "Other": 11
 }
+
+export const sector_list = Object.keys(sectors)
+
 export class Employer {
   /**
    * @param {keyof typeof sectors} sector

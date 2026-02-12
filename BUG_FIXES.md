@@ -42,17 +42,3 @@ I scanned the codebase and identified several critical calculation and API misma
 2. Update `src/utils/example.js` and `src/app.js` to provide a working example data generator.
 3. Update tests in `src/lib/functions.test.js` to match constructors and rounding rules.
 4. Run the test suite and iterate until green.
-
-## Quick commands
-
-Run tests:
-
-```bash
-npm test
-```
-
-Run linter/formatter as needed (project-specific).
-
----
-
-If you want I can start implementing the top-priority fixes now (classes/functions -> tests -> example generator). Reply "Proceed" and I'll apply the code changes and run tests.
