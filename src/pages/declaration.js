@@ -222,9 +222,9 @@ function script() {
 }
 
 const declaration = {
-    template,
-    styles,
-    script
-}
+  template,
+  styles,
+  script,
+};
 
 export default declaration;

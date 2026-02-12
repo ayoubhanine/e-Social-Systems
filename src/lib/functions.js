@@ -15,8 +15,6 @@ export function get_employee_by_id(employee_id) {
   return null;
 }
 
-
-
 /**
  *
  * @returns {Employee[]} Array of all employees
@@ -39,22 +37,30 @@ export function get_employee_rights(employee_id) {
   /**
    * @type {Employee | null}
    */
-
   let employee = null;
+
   for (let employer of EMPLOYERS.values()) {
     employee = employer.get_employee(employee_id);
     if (employee) break;
   }
+
   if (!employee) return null;
+
   let total = 0;
+
   for (let declaration of DECLARATIONS.values()) {
     if (declaration.employee_id === employee_id) {
+      // Employee contribution (capped if required)
       total += employee.contribution;
-      total += Math.min(employee.salary , 6000) * 0.08;
+
+      // Employer contribution (NOT capped anymore)
+      total += employee.salary * 0.08;
     }
   }
+
   return Math.ceil(total);
 }
+
 /**
  * Adds an employee to an employer.
  * @param {string} employer_id
@@ -167,7 +173,7 @@ export function get_employer_contribution(employer_id) {
  * @returns {number}
  */
 export function get_days_between_dates(d1, d2) {
-  // this somehow fixes off-by-one issues 
+  // this somehow fixes off-by-one issues
   const day = 24 * 60 * 60 * 1000;
   const utc1 = Date.UTC(d1.getFullYear(), d1.getMonth(), d1.getDate());
   const utc2 = Date.UTC(d2.getFullYear(), d2.getMonth(), d2.getDate());
@@ -260,10 +266,9 @@ export function get_total_contributions_by_month(month) {
   return Math.ceil(total);
 }
 
-
 /**
  * @param {Date} date1
- * @param {Date} date2 
+ * @param {Date} date2
  * @returns {boolean} Whether the two dates are in the same month and year
  */
 export function compare_date_months(date1, date2) {
