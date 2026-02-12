@@ -10,7 +10,7 @@ function styles() {
 function script() {}
 
 // delete event listeners or other resources when navigating away
-function cleanup(element, event, handler) {
+export function cleanup(element, event, handler) {
   element?.removeEventListener(event, handler);
 }
 
