@@ -10,7 +10,7 @@ const routes = {
   "/declaration": Declaration,
   "/employeurs": Employeurs,
   "/assures": Assures,
-  "/historique":Historique
+  "/historique": Historique,
 };
 generateExampleData(4 , 3 , 3)
 
@@ -25,7 +25,7 @@ export async function navigate(path) {
   render(path);
   root.classList.remove("exit");
   root.classList.add("enter");
-  await sleep(300); 
+  await sleep(300);
   root.classList.remove("enter");
 }
 
@@ -68,4 +68,4 @@ function toggle_active_link(path) {
 }
 
 render(window.location.pathname);
-toggle_active_link(window.location.pathname)
+toggle_active_link(window.location.pathname);
