@@ -4,13 +4,11 @@ import {
   get_employer_by_id,
   compare_date_months,
 } from "../lib/functions";
-import { generateExampleData } from "../utils/example";
 import { Declaration } from "../lib/classes";
 import { DECLARATIONS } from "../data";
 
+
 const now = `${get_now().getFullYear()}-${String(get_now().getMonth() + 1).padStart(2, "0")}`;
-// DECLARATIONS.clear();
-generateExampleData(5, 5, 2);
 function template() {
   return html`
     <section class="historique">

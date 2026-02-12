@@ -4,17 +4,19 @@ import Declaration from "../pages/declaration";
 import Employeurs from "../pages/Employeurs";
 import Assures from "../pages/assures";
 import Historique from "../pages/Historique";
+import { generateExampleData } from "../utils/example";
 const routes = {
   "/": Dashboard,
   "/declaration": Declaration,
   "/employeurs": Employeurs,
   "/assures": Assures,
-  "/historique":Historique
+  "/historique": Historique,
 };
+generateExampleData(4 , 3 , 3)
 
 // create root element and style element for page styles
 const root = select("#app");
-const page_style = document.createElement("style");
+const page_style = document.createElement("style" );
 document.head.appendChild(page_style);
 export async function navigate(path) {
   root.classList.add("exit");
@@ -23,7 +25,7 @@ export async function navigate(path) {
   render(path);
   root.classList.remove("exit");
   root.classList.add("enter");
-  await sleep(300); 
+  await sleep(300);
   root.classList.remove("enter");
 }
 
@@ -36,6 +38,7 @@ function render(path) {
   }
   root.innerHTML = page.template();
   page_style.textContent = page.styles();
+  toggle_active_link(path )
   
   // cleanup previous page script if exists
   if (page.cleanup) page.cleanup();
@@ -57,6 +60,7 @@ document.addEventListener("click", (e) => {
 function toggle_active_link(path) {
   const links = document.querySelectorAll("[data-link]");
   links.forEach((link) => {
+    
     if (link.getAttribute("href") === path) {
       link.classList.add("active");
     } else {
@@ -66,4 +70,4 @@ function toggle_active_link(path) {
 }
 
 render(window.location.pathname);
-toggle_active_link(window.location.pathname)
+toggle_active_link(window.location.pathname);

@@ -51,7 +51,7 @@ export function generateExampleData(
     for (let j = 0; j < employeePerEmployer; j++) {
       const employee = new Employee(
         faker.person.fullName(),
-        faker.number.int({ min: 25000, max: 150000 }) // Realistic salary range
+        faker.number.int({ min: 2000, max: 8000 }) 
       );
       
       employer.add_employee(employee);

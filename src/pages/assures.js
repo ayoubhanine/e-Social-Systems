@@ -1,10 +1,10 @@
 import { css, html } from "../utils/index";
 import { add_employee, get_all_employees, get_all_employers, get_employee_by_id, get_employee_rights, get_employer_by_id } from "../lib/functions";
 import { Employee } from "../lib/classes.js";
-import { generateExampleData } from "../utils/example.js";
+
 import { DECLARATIONS, EMPLOYERS } from "../data";
 
-generateExampleData()
+
 function template() {
   return html`
     <section class="assures-section">
