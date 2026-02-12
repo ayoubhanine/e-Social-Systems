@@ -59,6 +59,7 @@ document.addEventListener("click", (e) => {
 function toggle_active_link(path) {
   const links = document.querySelectorAll("[data-link]");
   links.forEach((link) => {
+    
     if (link.getAttribute("href") === path) {
       link.classList.add("active");
     } else {
