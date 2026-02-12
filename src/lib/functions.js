@@ -167,9 +167,11 @@ export function get_employer_contribution(employer_id) {
  * @returns {number}
  */
 export function get_days_between_dates(d1, d2) {
-  const day = 24 * 60 * 60 * 1000; // hours * minutes * seconds * milliseconds
-  const diff = Math.round(Math.abs((d2.getTime() - d1.getTime()) / day));
-  return diff;
+  // this somehow fixes off-by-one issues 
+  const day = 24 * 60 * 60 * 1000;
+  const utc1 = Date.UTC(d1.getFullYear(), d1.getMonth(), d1.getDate());
+  const utc2 = Date.UTC(d2.getFullYear(), d2.getMonth(), d2.getDate());
+  return Math.abs((utc2 - utc1) / day);
 }
 
 // global statistics functions
