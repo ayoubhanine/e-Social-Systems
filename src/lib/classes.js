@@ -150,9 +150,9 @@ export class Declaration {
     console.table({
       days_late,
       base_contribution,
-      penaltie: Math.ceil(days_late * base_contribution * 0.05),
+      penaltie: Math.ceil(days_late * base_contribution * 0.005),
     });
-    return Math.ceil(days_late * base_contribution * 0.05);
+    return Math.ceil(days_late * base_contribution * 0.005);
   }
 
   get total_contribution() {
