@@ -2,7 +2,7 @@
 import { EMPLOYERS } from "../data";
 
 // class bach ncreiw object jdid
-import { Employer } from "../lib/classes";
+import { Employer, sector_list } from "../lib/classes";
 
 // function bach nzidou f Employers
 import { add_employer } from "../lib/functions";
@@ -52,17 +52,15 @@ function template() {
           <form class="modal-form" id="formAddEmployeur">
             <div class="form-group">
               <label class="form-label">Raison Sociale</label>
-              <input
-                type="text"
-                class="form-input"
-                id="inputRaisonSociale"
-                required
-              />
+              <input type="text" class="form-input" id="inputRaisonSociale" />
             </div>
 
             <div class="form-group">
               <label class="form-label">Secteur</label>
-              <select class="form-select" id="selectSecteur" required></select>
+
+              <select class="form-select" id="selectSecteur">
+                <option value="" default>----choisie un secteur----</option>
+              </select>
             </div>
 
             <div class="modal-actions">
@@ -312,7 +310,6 @@ function styles() {
 }
 
 function script() {
-  console.log(example_data);
   // button "ajouter"
   const btnAdd = document.getElementById("btnAddEmployeur");
 
@@ -381,6 +378,13 @@ function script() {
     //Kat-khrj les valeurs dyal inputs F L-WA9T dyal submit
     const raisonSociale = document.getElementById("inputRaisonSociale").value;
     const secteur = document.getElementById("selectSecteur").value;
+    console.warn(secteur);
+
+    // submit dyal l validation
+    if (!raisonSociale || !secteur) {
+      toast.error("Tous les champs sont obligatoires !");
+      return;
+    }
 
     // Kat-créia objet jdid mn class Employer
     // Ajouter f table
@@ -399,15 +403,7 @@ function script() {
   }
   form?.addEventListener("submit", handleSubmit);
 
-  // Table row click
-  document.querySelectorAll("#employeursTableBody tr").forEach((row) => {
-    row.addEventListener("click", () => {
-      const id = row.querySelector(".id-cell").textContent;
-      console.log("Ligne cliquée:", id);
-    });
-  });
-
-  example_data.sectors.forEach((sector) => {
+  sector_list.forEach((sector) => {
     const option = document.createElement("option");
     option.value = sector;
     option.textContent = sector;

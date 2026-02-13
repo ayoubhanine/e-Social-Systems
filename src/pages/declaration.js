@@ -1,6 +1,8 @@
 import { css, html } from "../utils/index";
 import { DECLARATIONS, EMPLOYERS } from "../data/index.js";
 import toast from "../utils/toast.js";
+import { Declaration } from "../lib/classes.js";
+import { get_days_between_dates } from "../lib/functions.js";
 function template() {
   return html`
     <header><h1>Declarations</h1></header>
@@ -204,7 +206,10 @@ function addEmployerDeclaration(employerId, date) {
   };
 
   // AJOUT DIRECT AU MAP
+  console.log(DECLARATIONS);
+
   DECLARATIONS.set(declaration.id, declaration);
+  console.log(DECLARATIONS);
 
   // Vérifier que l'ajout a fonctionné
   console.log("DECLARATIONS après ajout:", DECLARATIONS.size);
@@ -247,19 +252,6 @@ function script() {
 
       // Réinitialiser select
       select.value = "";
-
-      // Rafraîchir la page historique SI ELLE EST OUVERTE
-      const historiquePage = document.querySelector(".historique");
-      if (historiquePage) {
-        // Importer dynamiquement Historique et re-render
-        import("./Historique.js").then((module) => {
-          const defaultHistorique = module.default;
-          if (defaultHistorique && defaultHistorique.script) {
-            // Re-run script pour mettre à jour l'affichage
-            defaultHistorique.script();
-          }
-        });
-      }
     }
   };
 }
