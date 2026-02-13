@@ -12,7 +12,7 @@ const routes = {
   "/assures": Assures,
   "/historique": Historique,
 };
-generateExampleData(4 , 3 , 3)
+// generateExampleData(4 , 3 , 3)
 
 // create root element and style element for page styles
 const root = select("#app");

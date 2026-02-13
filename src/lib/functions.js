@@ -197,7 +197,6 @@ export function get_employer_contribution(employer_id) {
  * @returns {number}
  */
 export function get_days_between_dates(d1, d2) {
-  // this somehow fixes off-by-one issues
   const day = 24 * 60 * 60 * 1000;
   const utc1 = Date.UTC(d1.getFullYear(), d1.getMonth(), d1.getDate());
   const utc2 = Date.UTC(d2.getFullYear(), d2.getMonth(), d2.getDate());
@@ -215,7 +214,7 @@ export function get_total_contributions() {
   // Simply sum all declaration total_contributions
   // Each declaration already includes all employees
   for (let declaration of DECLARATIONS.values()) {
-    total += declaration.total_contribution;
+    total += declaration.total_contribution + declaration.penalties;
   }
   
   return Math.ceil(total);
