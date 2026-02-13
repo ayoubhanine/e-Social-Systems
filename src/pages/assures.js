@@ -394,11 +394,27 @@ stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
 
 
 function get_employee_declared_months(id){
-  let declared = 0 
-  for(let emp of DECLARATIONS.values()){
-    if(emp.employee_id === id) declared++
+  const employee = get_employee_by_id(id);
+  if (!employee) return 0;
+  
+  let employer = null;
+  for (let emp of EMPLOYERS.values()) {
+    if (emp.get_employee(id)) {
+      employer = emp;
+      break;
+    }
   }
-  return declared
+  
+  if (!employer) return 0;
+  
+  let declared = 0;
+  for (let declaration of DECLARATIONS.values()) {
+    if (declaration.employer_id === employer.id) {
+      declared++;
+    }
+  }
+  
+  return declared;
 }
 
 const assures = { template, styles, script };
