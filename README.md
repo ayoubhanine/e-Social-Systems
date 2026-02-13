@@ -1,5 +1,4 @@
-# e-Social Systems
-
+# e-Social Systems - Projet de simulation d'un organisme de sécurité sociale 
 ## Project Structure
 ```
 src/
