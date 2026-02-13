@@ -17,7 +17,7 @@ function template() {
           <h4>Gestion des assurés et salaires</h4>
           <button id="btnAdd" class="btn-add">+ Ajouter Assurés</button>
         </div>
-
+        
         <div class="aaa">
           
           <table class="assures-table" id="assuresTable">
@@ -57,7 +57,7 @@ function template() {
 
         <label>
           Employeur:
-          <select id="employeur" class="epaiceur">
+          <select id="employeur" class="epaiceur" required>
             <option value="">--Choisir--</option>
             ${get_all_employers()
       .map(
