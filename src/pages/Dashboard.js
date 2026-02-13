@@ -189,7 +189,6 @@ function styles() {
  * Crée un graphique en barres des contributions des top employeurs sur 4 mois
  */
 function script() {
-  toast.success("dkfjk");
   /**
    * Récupère les contributions des top employeurs pour les 4 derniers mois
    * @returns {Array} Tableau d'objets {month, company, contribution}
