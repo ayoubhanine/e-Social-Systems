@@ -12,8 +12,11 @@ export const select = (selector) => {
 
 // just to get syntax highlighting when writing css and html in js files
 export function html(strings, ...values) {
-  return strings.join("");
+  return strings.reduce((result, string, i) => {
+    return result + string + (values[i] || "");
+  }, "");
 }
+// just static css
 export function css(strings, ...values) {
   return strings.join("");
 }
