@@ -2,12 +2,13 @@ import { faker } from "@faker-js/faker";
 import { Employer, Employee, Declaration } from "../lib/classes";
 /**
  * Generate random dataset of employers, employees and declarations.
+ * Declarations are created **per employer per month** (each includes all employees).
  *
  * @param {Object} opts
  * @param {number} opts.numEmployers - number of employers to create
  * @param {number} opts.minEmployees - minimum employees per employer
  * @param {number} opts.maxEmployees - maximum employees per employer
- * @param {number} opts.maxMonthsPerEmployee - max months declared per employee (0..12)
+ * @param {number} opts.maxMonthsPerEmployer - max months declared per employer (0..12)
  * @param {number} [opts.seed] - optional faker seed for reproducible results
  * @returns {{ employers: Employer[], employees: Employee[], declarations: Declaration[] }}
  */
@@ -15,7 +16,7 @@ export function generateRandomDataset({
   numEmployers = 10,
   minEmployees = 3,
   maxEmployees = 20,
-  maxMonthsPerEmployee = 12,
+  maxMonthsPerEmployer = 12,
   seed = undefined,
 } = {}) {
   if (typeof seed === "number") {
@@ -72,28 +73,25 @@ export function generateRandomDataset({
       employer.add_employee(employee);
 
       employees.push(employee);
+    }
 
-      // Generate random months declared for this employee (0..maxMonthsPerEmployee)
-      const monthsDeclared = faker.number.int({
-        min: 0,
-        max: maxMonthsPerEmployee,
-      });
-      employee.months_declared = monthsDeclared;
+    // Generate random months declared for this employer (0..maxMonthsPerEmployer)
+    const monthsDeclared = faker.number.int({
+      min: 0,
+      max: maxMonthsPerEmployer,
+    });
 
-      // Create declarations for random months (unique months)
-      const months = faker.helpers.uniqueArray(
-        () => faker.number.int({ min: 1, max: 12 }),
-        Math.min(monthsDeclared, 12),
-      );
+    // Create declarations for random unique months for this employer
+    const months = faker.helpers.uniqueArray(
+      () => faker.number.int({ min: 1, max: 12 }),
+      Math.min(monthsDeclared, 12),
+    );
 
-      for (const month of months) {
-        const decl = new Declaration(employee.id, employer.id, month);
-        // Declaration class only sets id in your snippet; attach fields explicitly
-        decl.employee_id = employee.id;
-        decl.employer_id = employer.id;
-        decl.month = month;
-        declarations.push(decl);
-      }
+    for (const month of months) {
+      const year = new Date().getFullYear();
+      const declarationDate = new Date(year, month - 1, 1);
+      const decl = new Declaration(employer.id, declarationDate);
+      declarations.push(decl);
     }
 
     employers.push(employer);
@@ -105,7 +103,7 @@ const example_data = generateRandomDataset({
   numEmployers: 10,
   minEmployees: 2,
   maxEmployees: 4,
-  maxMonthsPerEmployee: 6,
+  maxMonthsPerEmployer: 6,
   seed: 42, // reproducible
 });
 

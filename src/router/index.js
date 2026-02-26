@@ -18,6 +18,14 @@ generateExampleData(4 , 3 , 3)
 const root = select("#app");
 const page_style = document.createElement("style" );
 document.head.appendChild(page_style);
+// load styles for all pages to avoid flashing 
+Object.values(routes).forEach((page) => {
+  if (page.styles) {
+    page_style.textContent += page.styles();
+  }
+});
+
+
 export async function navigate(path) {
   root.classList.add("exit");
   await sleep(300);
@@ -33,11 +41,9 @@ function render(path) {
   const page = routes[path];
   if (!page) {
     root.innerHTML = html`<h1>404 - Not Found</h1>`;
-    page_style.textContent = "";
     return;
   }
   root.innerHTML = page.template();
-  page_style.textContent = page.styles();
   toggle_active_link(path )
   
   // cleanup previous page script if exists

@@ -29,16 +29,19 @@ function getRandomSector() {
 }
 
 /**
- * Generate example employers with employees and declarations
+ * Generate example employers with employees and declarations.
+ * Declarations are now created **per employer** (each includes all employees),
+ * not per employee.
+ *
  * @param {number} employerCount - Number of employers to generate
  * @param {number} employeePerEmployer - Number of employees per employer
- * @param {number} declarationsPerEmployee - Number of declarations per employee
+ * @param {number} declarationsPerEmployer - Number of declarations per employer
  * @returns {void}
  */
 export function generateExampleData(
   employerCount = 5,
   employeePerEmployer = 8,
-  declarationsPerEmployee = 6
+  declarationsPerEmployer = 6
 ) {
   // Generate employers
   for (let i = 0; i < employerCount; i++) {
@@ -55,20 +58,19 @@ export function generateExampleData(
       );
       
       employer.add_employee(employee);
+    }
 
-      // Generate declarations for each employee
-      for (let k = 0; k < declarationsPerEmployee; k++) {
-        // Generate dates spread over the past 6 months
-        const declarationDate = faker.date.past({ days: 180 });
-        
-        const declaration = new Declaration(
-          employee.id,
-          employer.id,
-          declarationDate
-        );
+    // Generate declarations for each employer (each declaration covers all employees)
+    for (let k = 0; k < declarationsPerEmployer; k++) {
+      // Generate dates spread over the past 6 months
+      const declarationDate = faker.date.past({ days: 180 });
+      
+      const declaration = new Declaration(
+        employer.id,
+        declarationDate
+      );
 
-        DECLARATIONS.set(declaration.id, declaration);
-      }
+      DECLARATIONS.set(declaration.id, declaration);
     }
 
     // Add employer to the global map
@@ -114,14 +116,14 @@ export function generateSingleEmployee() {
 }
 
 /**
- * Generate a single declaration for testing
- * @param {string} employeeId
+ * Generate a single declaration for testing.
+ * Declarations are now tied only to an employer (and include all its employees).
+ *
  * @param {string} employerId
  * @returns {Declaration}
  */
-export function generateSingleDeclaration(employeeId, employerId) {
+export function generateSingleDeclaration(employerId) {
   const declaration = new Declaration(
-    employeeId,
     employerId,
     faker.date.past({ days: 90 })
   );

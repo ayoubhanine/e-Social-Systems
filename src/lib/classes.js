@@ -1,21 +1,22 @@
 //@ts-check
-import { generate_id  } from "../utils";
-import { get_days_between_dates, get_employer_by_id } from "./functions"
+import { generate_id } from "../utils";
+import { get_days_between_dates, get_employer_by_id } from "./functions";
+import { DECLARATIONS } from "../data";
 const sectors = {
-  "Technology": 1,
-  "Healthcare": 2,
-  "Education": 3,
-  "Finance": 4,
-  "Manufacturing": 5,
-  "Retail": 6,
-  "Construction": 7,
-  "Transportation": 8,
-  "Hospitality": 9,
-  "Agriculture": 10,
-  "Other": 11
-}
+  Technology: 1,
+  Healthcare: 2,
+  Education: 3,
+  Finance: 4,
+  Manufacturing: 5,
+  Retail: 6,
+  Construction: 7,
+  Transportation: 8,
+  Hospitality: 9,
+  Agriculture: 10,
+  Other: 11,
+};
 
-export const sector_list = Object.keys(sectors)
+export const sector_list = Object.keys(sectors);
 
 export class Employer {
   /**
@@ -53,7 +54,7 @@ export class Employer {
    * @param {Employee} employee
    */
   add_employee(employee) {
-    if(this.employees.has(employee)) return;
+    if (this.employees.has(employee)) return;
     this.employees.add(employee);
   }
   /**
@@ -71,13 +72,12 @@ export class Employer {
   }
 }
 
-
 export class Employee {
-    /**
-     * 
-     * @param {string} name 
-     * @param {number} salary 
-     */
+  /**
+   *
+   * @param {string} name
+   * @param {number} salary
+   */
   constructor(name, salary) {
     this.id = generate_id();
     this.name = name;
@@ -85,8 +85,8 @@ export class Employee {
     this.months_declared = 0;
   }
   /**
-   * 
-   * @param {number} new_salary 
+   *
+   * @param {number} new_salary
    */
   set_salary(new_salary) {
     this.salary = new_salary;
@@ -98,17 +98,14 @@ export class Employee {
 }
 
 export class Declaration {
-    /**
-     * @param {string} employee_id 
-     * @param {string} employer_id 
-     * @param {Date} date 
-     */
-  constructor(employee_id, employer_id, date) {
+  /**
+   * @param {string} employer_id
+   * @param {Date} date
+   */
+  constructor(employer_id, date) {
     this.id = generate_id();
-    this.employee_id = employee_id;
     this.employer_id = employer_id;
     this.date = date;
-    
   }
   /**
    * Calculates penalties based on how many days late the declaration is from the 30-day submission window
@@ -117,24 +114,53 @@ export class Declaration {
   get penalties() {
     const employer = get_employer_by_id(this.employer_id);
     if (!employer) return 0;
-    const employee = employer.get_employee(this.employee_id);
-    if (!employee) return 0;
-    
-    const days_since = get_days_between_dates(this.date, new Date());
-    const days_late = Math.max(0, days_since - 30);
-    
+
+    // Find the previous declaration for this employer (most recent before this one)
+    let previous_declaration = null;
+    for (const declaration of DECLARATIONS.values()) {
+      if (
+        declaration.employer_id === this.employer_id &&
+        declaration.id !== this.id &&
+        declaration.date < this.date
+      ) {
+        if (
+          !previous_declaration ||
+          declaration.date > previous_declaration.date
+        ) {
+          previous_declaration = declaration;
+        }
+      }
+    }
+
+    // If no previous declaration exists, this is the first declaration - no penalty
+    if (!previous_declaration) return 0;
+
+    const days_elapsed = Math.floor(
+      get_days_between_dates(previous_declaration.date, this.date),
+    );
+    const days_late = Math.max(0, days_elapsed - 30);
+
     if (days_late <= 0) return 0;
-    
-    // Penalty: 0.005% per day of (employee contribution + employer contribution per employee)
-    const base_contribution = employee.contribution + (employer.contribution / employer.employee_count);
-    return Math.ceil(days_late * base_contribution * 0.00005); // 0.005% = 0.00005
+
+    // Calculate base contribution for ALL employees
+    let base_contribution = 0;
+    for (const employee of employer.employees) {
+      base_contribution += employee.contribution + employee.salary * 0.08;
+    }
+    return Math.ceil(days_late * base_contribution * 0.005);
   }
+
   get total_contribution() {
     const employer = get_employer_by_id(this.employer_id);
     if (!employer) return 0;
-    const employee = employer.get_employee(this.employee_id);
-    if (!employee) return 0;
 
-    return Math.ceil(employee.contribution + employer.contribution / employer.employee_count); 
+    // Calculate total for ALL employees
+    let total = 0;
+    for (const employee of employer.employees) {
+      total += employee.contribution; // Employee contribution (capped at 6000)
+      total += employee.salary * 0.08; // Employer contribution (NOT capped)
+    }
+
+    return Math.ceil(total);
   }
 }

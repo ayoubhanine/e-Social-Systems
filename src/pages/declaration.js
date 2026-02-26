@@ -2,9 +2,9 @@ import { css, html } from "../utils/index";
 import { DECLARATIONS, EMPLOYERS } from "../data/index.js";
 import toast from "../utils/toast.js";
 import { Declaration } from "../lib/classes.js";
-import { get_days_between_dates } from "../lib/functions.js";
-function template() {
-  return html`
+import { add_declaration } from "../lib/functions.js";
+function template(){
+    return html`
     <header><h1>Declarations</h1></header>
     <section class="declarations-page">
       <div class="declaration-card">
@@ -167,55 +167,8 @@ function addEmployerDeclaration(employerId, date) {
     toast.error("Employeur introuvable");
     return null;
   }
-
-  // Créer déclaration pour l'employeur (sans employee_id)
-  const declaration = {
-    id: crypto.randomUUID().slice(0, 8),
-    employee_id: null,
-    employer_id: employerId,
-    date: new Date(date),
-
-    get total_contribution() {
-      const emp = EMPLOYERS.get(this.employer_id);
-      if (!emp) return 0;
-
-      let total = 0;
-      emp.employees.forEach((employee) => {
-        total += employee.contribution;
-        total += Math.min(employee.salary, 6000) * 0.08;
-      });
-      return Math.ceil(total);
-    },
-
-    get penalties() {
-      const emp = EMPLOYERS.get(this.employer_id);
-      if (!emp) return 0;
-
-      const days_since = get_days_between_dates(this.date, new Date());
-      const days_late = Math.max(0, days_since - 30);
-
-      if (days_late <= 0) return 0;
-
-      let base = 0;
-      emp.employees.forEach((employee) => {
-        base += employee.contribution + emp.contribution / emp.employee_count;
-      });
-
-      return Math.ceil(days_late * base * 0.00005);
-    },
-  };
-
-  // AJOUT DIRECT AU MAP
-  console.log(DECLARATIONS);
-
-  DECLARATIONS.set(declaration.id, declaration);
-  console.log(DECLARATIONS);
-
-  // Vérifier que l'ajout a fonctionné
-  console.log("DECLARATIONS après ajout:", DECLARATIONS.size);
-  console.log("Déclaration ajoutée:", declaration);
-
-  return declaration;
+  const declaration = new Declaration(employerId, new Date(date));
+  add_declaration(declaration);
 }
 
 function script() {
@@ -244,15 +197,10 @@ function script() {
       toast.error("Veuillez sélectionner un mois");
       return;
     }
-
-    const declaration = addEmployerDeclaration(employerId, mois);
-
-    if (declaration) {
-      toast.withLink("Déclaration réussie", "Voir l'historique", "/historique");
-
-      // Réinitialiser select
-      select.value = "";
-    }
+    addEmployerDeclaration(employerId, mois);
+    toast.withLink("Déclaration réussie", "Voir l'historique", "/historique");
+    select.value = "";
+    document.getElementById("mois").value = "";
   };
 }
 

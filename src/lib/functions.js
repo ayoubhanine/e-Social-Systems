@@ -34,26 +34,30 @@ export function get_all_employees() {
  * @returns {number | null} Total contributions (employee + employer) or null if employee not found
  */
 export function get_employee_rights(employee_id) {
-  /**
-   * @type {Employee | null}
-   */
-  let employee = null;
-
-  for (let employer of EMPLOYERS.values()) {
-    employee = employer.get_employee(employee_id);
-    if (employee) break;
-  }
-
+  const employee = get_employee_by_id(employee_id);
   if (!employee) return null;
 
+  // Find the employer of this employee
+  let employer = null;
+  for (let emp of EMPLOYERS.values()) {
+    if (emp.get_employee(employee_id)) {
+      employer = emp;
+      break;
+    }
+  }
+  
+  if (!employer) return null;
+
   let total = 0;
-
+  
+  // Find all declarations for this employer
   for (let declaration of DECLARATIONS.values()) {
-    if (declaration.employee_id === employee_id) {
-      // Employee contribution (capped if required)
+    if (declaration.employer_id === employer.id) {
+      // Calculate this employee's portion of the declaration
+      // Employee contribution
       total += employee.contribution;
-
-      // Employer contribution (NOT capped anymore)
+      
+      // Employer contribution for this employee
       total += employee.salary * 0.08;
     }
   }
@@ -131,20 +135,35 @@ export function add_employer(employer) {
  * @throws {Error}
  */
 export function get_employee_contribution(employee_id) {
-  /**
-   * @type {Employee | null}
-   */
-  let employee = get_employee_by_id(employee_id);
+  const employee = get_employee_by_id(employee_id);
   if (!employee) throw new Error("employee not found");
-  let contribution = 0;
-  for (let declaration of DECLARATIONS.values()) {
-    if (declaration.employee_id === employee_id) {
-      contribution += employee.contribution;
+  
+  // Find the employer of this employee
+  let employer = null;
+  for (let emp of EMPLOYERS.values()) {
+    if (emp.get_employee(employee_id)) {
+      employer = emp;
+      break;
     }
   }
+  
+  if (!employer) return 0;
+  
+  let contribution = 0;
+  
+  // Count declarations for this employer (each includes this employee)
+  let declaration_count = 0;
+  for (let declaration of DECLARATIONS.values()) {
+    if (declaration.employer_id === employer.id) {
+      declaration_count++;
+    }
+  }
+  
+  // Employee contribution per declaration * number of declarations
+  contribution = employee.contribution * declaration_count;
+  
   return contribution;
 }
-
 /**
  * Calculates total employer contribution for all declarations of a given employer.
  * @param {string} employer_id
@@ -154,16 +173,21 @@ export function get_employer_contribution(employer_id) {
   const employer = EMPLOYERS.get(employer_id);
   if (!employer) return 0;
 
-  let contribution = 0;
+  // Count declarations for this employer
+  let declaration_count = 0;
   for (let declaration of DECLARATIONS.values()) {
     if (declaration.employer_id === employer_id) {
-      const employee = employer.get_employee(declaration.employee_id);
-      if (employee) {
-        contribution += employee.salary * 0.08;
-      }
+      declaration_count++;
     }
   }
-  return Math.ceil(contribution);
+  
+  // Calculate total employer contribution: sum of (salary * 0.08) for all employees * declaration count
+  let total_per_declaration = 0;
+  for (const employee of employer.employees) {
+    total_per_declaration += employee.salary * 0.08;
+  }
+  
+  return Math.ceil(total_per_declaration * declaration_count);
 }
 
 /**
@@ -173,7 +197,6 @@ export function get_employer_contribution(employer_id) {
  * @returns {number}
  */
 export function get_days_between_dates(d1, d2) {
-  // this somehow fixes off-by-one issues
   const day = 24 * 60 * 60 * 1000;
   const utc1 = Date.UTC(d1.getFullYear(), d1.getMonth(), d1.getDate());
   const utc2 = Date.UTC(d2.getFullYear(), d2.getMonth(), d2.getDate());
@@ -187,15 +210,13 @@ export function get_days_between_dates(d1, d2) {
  */
 export function get_total_contributions() {
   let total = 0;
+  
+  // Simply sum all declaration total_contributions
+  // Each declaration already includes all employees
   for (let declaration of DECLARATIONS.values()) {
-    const employer = EMPLOYERS.get(declaration.employer_id);
-    if (!employer) continue;
-    const employee = employer.get_employee(declaration.employee_id);
-    if (employee) {
-      total += employee.contribution;
-      total += employee.salary * 0.08;
-    }
+    total += declaration.total_contribution + declaration.penalties;
   }
+  
   return Math.ceil(total);
 }
 
@@ -232,12 +253,11 @@ export function get_average_employee_salary() {
   return employee_count > 0 ? total_salary / employee_count : 0;
 }
 
+/**
+ * @returns {Declaration[]} Array of all declarations
+ */
 export function get_all_declarations() {
-  let declarations = [];
-  for (let declaration of DECLARATIONS.values()) {
-    declarations.push(declaration);
-  }
-  return declarations;
+  return [...DECLARATIONS.values()]
 }
 
 /**
@@ -247,20 +267,18 @@ export function get_all_declarations() {
  */
 export function get_total_contributions_by_month(month) {
   let total = 0;
+  const targetMonth = new Date(month).getMonth() + 1;
+  const targetYear = new Date(month).getFullYear();
 
   for (let declaration of DECLARATIONS.values()) {
-    const declarationMonth = new Date(declaration.date).getMonth() + 1;
+    const declarationDate = new Date(declaration.date);
+    const declarationMonth = declarationDate.getMonth() + 1;
+    const declarationYear = declarationDate.getFullYear();
 
-    if (declarationMonth !== new Date(month).getMonth() + 1) continue;
-
-    const employer = EMPLOYERS.get(declaration.employer_id);
-    if (!employer) continue;
-
-    const employee = employer.get_employee(declaration.employee_id);
-    if (!employee) continue;
-
-    total += employee.contribution;
-    total += employee.salary * 0.08;
+    if (declarationMonth === targetMonth && declarationYear === targetYear) {
+      // Each declaration already includes all employees
+      total += declaration.total_contribution;
+    }
   }
 
   return Math.ceil(total);
