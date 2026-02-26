@@ -141,10 +141,10 @@ describe("get_employee_rights", () => {
     employer.add_employee(employee);
     EMPLOYERS.set(employer.id, employer);
 
-    // Create 3 declarations
-    const decl1 = new Declaration(employee.id, employer.id, new Date("2024-01-01"));
-    const decl2 = new Declaration(employee.id, employer.id, new Date("2024-02-01"));
-    const decl3 = new Declaration(employee.id, employer.id, new Date("2024-03-01"));
+    // Create 3 declarations for the employer (each includes all employees)
+    const decl1 = new Declaration(employer.id, new Date("2024-01-01"));
+    const decl2 = new Declaration(employer.id, new Date("2024-02-01"));
+    const decl3 = new Declaration(employer.id, new Date("2024-03-01"));
     DECLARATIONS.set(decl1.id, decl1);
     DECLARATIONS.set(decl2.id, decl2);
     DECLARATIONS.set(decl3.id, decl3);
@@ -163,7 +163,8 @@ describe("get_employee_rights", () => {
     employer.add_employee(employee);
     EMPLOYERS.set(employer.id, employer);
 
-    const decl = new Declaration(employee.id, employer.id, new Date("2024-01-01"));
+    // Single declaration for the employer (includes this employee)
+    const decl = new Declaration(employer.id, new Date("2024-01-01"));
     DECLARATIONS.set(decl.id, decl);
 
     // Employee contribution: 6000 * 0.04 = 240 (capped)
@@ -199,7 +200,7 @@ describe("add_employee", () => {
 
 describe("add_declaration", () => {
   it("should add declaration to declarations map", () => {
-    const declaration = new Declaration("emp1", "emp1", new Date());
+    const declaration = new Declaration("emp1", new Date());
 
     FN.add_declaration(declaration);
 
@@ -236,8 +237,8 @@ describe("get_employee_contribution", () => {
     employer.add_employee(employee);
     EMPLOYERS.set(employer.id, employer);
 
-    const decl1 = new Declaration(employee.id, employer.id, new Date("2024-01-01"));
-    const decl2 = new Declaration(employee.id, employer.id, new Date("2024-02-01"));
+    const decl1 = new Declaration(employer.id, new Date("2024-01-01"));
+    const decl2 = new Declaration(employer.id, new Date("2024-02-01"));
     DECLARATIONS.set(decl1.id, decl1);
     DECLARATIONS.set(decl2.id, decl2);
 
@@ -253,7 +254,7 @@ describe("get_employee_contribution", () => {
     employer.add_employee(employee);
     EMPLOYERS.set(employer.id, employer);
 
-    const decl = new Declaration(employee.id, employer.id, new Date());
+    const decl = new Declaration(employer.id, new Date());
     DECLARATIONS.set(decl.id, decl);
 
     // Employee contribution: 6000 * 0.04 = 240 (capped)
@@ -278,15 +279,18 @@ describe("get_employer_contribution", () => {
     employer.add_employee(employee2);
     EMPLOYERS.set(employer.id, employer);
 
-    const decl1 = new Declaration(employee1.id, employer.id, new Date("2024-01-01"));
-    const decl2 = new Declaration(employee2.id, employer.id, new Date("2024-02-01"));
+    const decl1 = new Declaration(employer.id, new Date("2024-01-01"));
+    const decl2 = new Declaration(employer.id, new Date("2024-02-01"));
     DECLARATIONS.set(decl1.id, decl1);
     DECLARATIONS.set(decl2.id, decl2);
 
-    // Employer contribution: 5000 * 0.08 = 400 + 4000 * 0.08 = 320
-    // Total: 720
+    // Employer contribution per declaration:
+    //  employee1: 5000 * 0.08 = 400
+    //  employee2: 4000 * 0.08 = 320
+    //  Total per declaration: 720
+    // For 2 declarations: 1440
     const contribution = FN.get_employer_contribution(employer.id);
-    expect(contribution).toBe(720);
+    expect(contribution).toBe(1440);
   });
 
   it("should handle multiple declarations for same employee", () => {
@@ -295,8 +299,8 @@ describe("get_employer_contribution", () => {
     employer.add_employee(employee);
     EMPLOYERS.set(employer.id, employer);
 
-    const decl1 = new Declaration(employee.id, employer.id, new Date("2024-01-01"));
-    const decl2 = new Declaration(employee.id, employer.id, new Date("2024-02-01"));
+    const decl1 = new Declaration(employer.id, new Date("2024-01-01"));
+    const decl2 = new Declaration(employer.id, new Date("2024-02-01"));
     DECLARATIONS.set(decl1.id, decl1);
     DECLARATIONS.set(decl2.id, decl2);
 
@@ -322,8 +326,8 @@ describe("get_total_contributions", () => {
     EMPLOYERS.set(employer1.id, employer1);
     EMPLOYERS.set(employer2.id, employer2);
 
-    const decl1 = new Declaration(emp1.id, employer1.id, new Date("2024-01-01"));
-    const decl2 = new Declaration(emp2.id, employer2.id, new Date("2024-02-01"));
+    const decl1 = new Declaration(employer1.id, new Date("2024-01-01"));
+    const decl2 = new Declaration(employer2.id, new Date("2024-02-01"));
     DECLARATIONS.set(decl1.id, decl1);
     DECLARATIONS.set(decl2.id, decl2);
 
@@ -340,8 +344,8 @@ describe("get_total_contributions", () => {
     employer.add_employee(employee);
     EMPLOYERS.set(employer.id, employer);
 
-    const decl1 = new Declaration(employee.id, employer.id, new Date("2024-01-01"));
-    const decl2 = new Declaration(employee.id, employer.id, new Date("2024-02-01"));
+    const decl1 = new Declaration(employer.id, new Date("2024-01-01"));
+    const decl2 = new Declaration(employer.id, new Date("2024-02-01"));
     DECLARATIONS.set(decl1.id, decl1);
     DECLARATIONS.set(decl2.id, decl2);
 
@@ -370,10 +374,10 @@ describe("get_highest_contributing_employer", () => {
     EMPLOYERS.set(employer2.id, employer2);
 
     // Employer1: 2 declarations
-    const decl1 = new Declaration(emp1.id, employer1.id, new Date("2024-01-01"));
-    const decl2 = new Declaration(emp2.id, employer1.id, new Date("2024-02-01"));
+    const decl1 = new Declaration(employer1.id, new Date("2024-01-01"));
+    const decl2 = new Declaration(employer1.id, new Date("2024-02-01"));
     // Employer2: 1 declaration
-    const decl3 = new Declaration(emp3.id, employer2.id, new Date("2024-03-01"));
+    const decl3 = new Declaration(employer2.id, new Date("2024-03-01"));
     DECLARATIONS.set(decl1.id, decl1);
     DECLARATIONS.set(decl2.id, decl2);
     DECLARATIONS.set(decl3.id, decl3);
@@ -395,8 +399,8 @@ describe("get_highest_contributing_employer", () => {
     EMPLOYERS.set(employer1.id, employer1);
     EMPLOYERS.set(employer2.id, employer2);
 
-    const decl1 = new Declaration(emp1.id, employer1.id, new Date("2024-01-01"));
-    const decl2 = new Declaration(emp2.id, employer2.id, new Date("2024-02-01"));
+    const decl1 = new Declaration(employer1.id, new Date("2024-01-01"));
+    const decl2 = new Declaration(employer2.id, new Date("2024-02-01"));
     DECLARATIONS.set(decl1.id, decl1);
     DECLARATIONS.set(decl2.id, decl2);
 
@@ -408,37 +412,45 @@ describe("get_highest_contributing_employer", () => {
 
 
 describe("Declaration class", () => {
-  it("should calculate total_contribution correctly", () => {
+  it("should calculate total_contribution correctly for all employees", () => {
     const employer = new Employer("Tech", "Company A", 100000);
-    const employee = new Employee("John", 5000);
-    employer.add_employee(employee);
+    const employee1 = new Employee("John", 5000);
+    const employee2 = new Employee("Jane", 4000);
+    employer.add_employee(employee1);
+    employer.add_employee(employee2);
     EMPLOYERS.set(employer.id, employer);
 
-    const declaration = new Declaration(employee.id, employer.id, new Date());
+    const declaration = new Declaration(employer.id, new Date());
 
-    // Employee contribution: 5000 * 0.04 = 200
-    // Employer contribution: 5000 * 0.08 = 400
-    // Per employee: 400 / 1 = 400
-    // Total: 200 + 400 = 600
-    expect(declaration.total_contribution).toBe(600);
+    // Employee1 contribution: 5000 * 0.04 = 200
+    // Employee1 employer contribution: 5000 * 0.08 = 400
+    // Employee2 contribution: 4000 * 0.04 = 160
+    // Employee2 employer contribution: 4000 * 0.08 = 320
+    // Total: 200 + 400 + 160 + 320 = 1080
+    expect(declaration.total_contribution).toBe(1080);
   });
 
   it("should calculate penalties for late declarations", () => {
     const employer = new Employer("Tech", "Company A", 100000);
-    const employee = new Employee("John", 5000);
-    employer.add_employee(employee);
+    const employee1 = new Employee("John", 5000);
+    const employee2 = new Employee("Jane", 4000);
+    employer.add_employee(employee1);
+    employer.add_employee(employee2);
     EMPLOYERS.set(employer.id, employer);
 
     // Create a declaration from 40 days ago (10 days late)
     const pastDate = new Date();
     pastDate.setDate(pastDate.getDate() - 40);
-    const declaration = new Declaration(employee.id, employer.id, pastDate);
+    const declaration = new Declaration(employer.id, pastDate);
 
     // Days late: 40 - 30 = 10 days
-    // Base contribution: 200 (employee) + 400 (employer per employee) = 600
-    // Penalty: 10 * 600 * 0.00005 = 0.3
+    // Base contribution for all employees:
+    //  Employee1: 200 (employee) + 400 (employer) = 600
+    //  Employee2: 160 (employee) + 320 (employer) = 480
+    //  Total base: 1080
+    // Penalty: 10 * 1080 * 0.00005 = 0.54 -> ceil(0.54) = 1
     const penalties = declaration.penalties;
-    expect(penalties).toBeCloseTo(0.3, 2);
+    expect(penalties).toBe(1);
   });
 
   it("should return 0 penalties for recent declarations", () => {
@@ -447,29 +459,14 @@ describe("Declaration class", () => {
     employer.add_employee(employee);
     EMPLOYERS.set(employer.id, employer);
 
-    const declaration = new Declaration(employee.id, employer.id, new Date());
+    const declaration = new Declaration(employer.id, new Date());
 
     // Recent declaration should have no penalty
     expect(declaration.penalties).toBe(0);
   });
 
-  it("should return 0 total_contribution if employee not found", () => {
-    const employer = new Employer("Tech", "Company A", 100000);
-    EMPLOYERS.set(employer.id, employer);
-
-    const declaration = new Declaration("nonexistent", employer.id, new Date());
-
-    expect(declaration.total_contribution).toBe(0);
-  });
-
-  it("should return 0 penalties if employee not found", () => {
-    const employer = new Employer("Tech", "Company A", 100000);
-    EMPLOYERS.set(employer.id, employer);
-
-    const declaration = new Declaration("nonexistent", employer.id, new Date());
-
-    expect(declaration.penalties).toBe(0);
-  });
+  // With the new model, declarations are always tied to an employer (all employees),
+  // so there is no "missing employee" case on Declaration itself anymore.
 });
 
 describe("get_average_employee_salary", () => {

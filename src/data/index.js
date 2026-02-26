@@ -1,4 +1,4 @@
-    import { Declaration, Employer } from "../lib/classes";
+import { Declaration, Employer } from "../lib/classes";
 /**
  * @type {Map<string,Employer>}
  */

@@ -8,17 +8,17 @@ export const select = (selector) => {
   if (!el) throw new Error(`couldn't find element with selector ${selector}`);
   return el;
 };
-// just to get syntax highlighting in other files
+
+
+// just to get syntax highlighting when writing css and html in js files
 export function html(strings, ...values) {
-  return strings.reduce((acc, str, i) => {
-    return acc + str + (values[i] || "");
+  return strings.reduce((result, string, i) => {
+    return result + string + (values[i] || "");
   }, "");
 }
-
+// just static css
 export function css(strings, ...values) {
-  return strings.reduce((acc, str, i) => {
-    return acc + str + (values[i] || "");
-  }, "");
+  return strings.join("");
 }
 
 /**

@@ -8,6 +8,7 @@ import {
 import { css, html } from "../utils/index";
 
 let myChart = null;
+import toast from "../utils/toast";
 
 /**
  * Génère le template HTML du tableau de bord
@@ -188,7 +189,6 @@ function styles() {
  * Crée un graphique en barres des contributions des top employeurs sur 4 mois
  */
 function script() {
-  // toast.success("dkfjk");
   /**
    * Récupère les contributions des top employeurs pour les 4 derniers mois
    * @returns {Array} Tableau d'objets {month, company, contribution}
@@ -211,8 +211,14 @@ function script() {
 
       // Format du mois : YYYY-MM
       const month = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}`;
-      const company = EMPLOYERS.get(decl.employer_id).company_name;
+      const employer = EMPLOYERS.get(decl.employer_id);
 
+      // Check if employer exists
+      if (!employer) {
+        return;
+      }
+
+      const company = employer.company_name;
       // Initialisation de la structure si nécessaire
       grouped[month] = grouped[month] || {};
       // Accumulation des contributions par entreprise
