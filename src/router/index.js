@@ -5,13 +5,7 @@ import Employeurs from "../pages/Employeurs";
 import Assures from "../pages/assures";
 import Historique from "../pages/Historique";
 import { generateExampleData } from "../utils/example";
-const routes = {
-  "/": Dashboard,
-  "/declaration": Declaration,
-  "/employeurs": Employeurs,
-  "/assures": Assures,
-  "/historique": Historique,
-};
+const routes = {"/": Dashboard,"/declaration": Declaration,"/employeurs": Employeurs,"/assures": Assures,"/historique": Historique};
 generateExampleData(4 , 3 , 3)
 
 // create root element and style element for page styles

@@ -161,11 +161,10 @@ function styles() {
 }
 
 function addEmployerDeclaration(employerId, date) {
-  // Get employer
   const employer = EMPLOYERS.get(employerId);
   if (!employer) {
     toast.error("Employeur introuvable");
-    return null;
+    return [];
   }
   const declaration = new Declaration(employerId, new Date(date));
   add_declaration(declaration);
@@ -176,6 +175,7 @@ function script() {
   const select = document.getElementById("employer-select");
   if (!select) return;
 
+  // Remplir le select avec tous les employeurs
   EMPLOYERS.forEach((emp) => {
     const option = document.createElement("option");
     option.value = emp.id;
@@ -184,10 +184,12 @@ function script() {
   });
 
   if (!btn) return;
+  
   btn.onclick = () => {
     const employerId = select.value;
     const mois = document.getElementById("mois").value;
 
+    // Validation
     if (!employerId) {
       toast.error("Veuillez sélectionner un employeur");
       return;

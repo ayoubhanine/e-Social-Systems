@@ -1,3 +1,5 @@
+// Fonctions pour manipuler les données
+
 //@ts-check
 import { DECLARATIONS, EMPLOYERS } from "../data/index";
 import { Employer, Declaration, Employee } from "./classes";
